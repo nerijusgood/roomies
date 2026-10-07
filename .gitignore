@@ -11,3 +11,6 @@ dist-demo
 # Mac + Claude
 .DS_Store
 Claude outputs/
+
+# Yarn only
+package-lock.json

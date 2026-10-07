@@ -7,26 +7,26 @@ Currently **local only with demo data** (Nerijus, Emma, Lukas, Sofie).
 ## Run it
 
 ```bash
-npm install
-npm run demo      # optional: fill in demo progress for this week and last week
-npm run dev       # http://localhost:5173
+yarn install
+yarn demo      # optional: fill in demo progress for this week and last week
+yarn dev       # http://localhost:5173
 ```
 
 Demo PINs: Nerijus `1111`, Emma `2222`, Lukas `3333`, Sofie `4444`.
 
-**Try it on your phone:** `npm run dev` prints a *Network* address (like `http://192.168.1.20:5173`). Open it on a phone on the same wifi. Ticks sync between phones through your Mac.
+**Try it on your phone:** `yarn dev` prints a *Network* address (like `http://192.168.1.20:5173`). Open it on a phone on the same wifi. Ticks sync between phones through your Mac.
 
 **Test offline + install:** offline caching only runs in a production build:
 
 ```bash
-npm run build && npm run preview   # http://localhost:4173 + Network address
+yarn build && yarn preview   # http://localhost:4173 + Network address
 ```
 
 Note: "Add to Home Screen" with full offline support needs HTTPS, so on a real phone this fully works after deploying (Vercel). On the Mac, `localhost` counts as secure, so you can test offline there (DevTools → Network → Offline).
 
-**Shareable demo:** `npm run build:demo` makes one self-contained file, `dist-demo/index.html`, with a fake in-browser API (no server, data stays in that browser).
+**Shareable demo:** `yarn build:demo` makes one self-contained file, `dist-demo/index.html`, with a fake in-browser API (no server, data stays in that browser).
 
-Other commands: `npm test` (rotation, sync and API tests), `npm run typecheck`.
+Other commands: `yarn test` (rotation, sync and API tests), `yarn typecheck`.
 
 ## Edit the house
 

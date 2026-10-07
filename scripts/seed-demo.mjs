@@ -1,5 +1,5 @@
 // Fills data/ticks.json with demo progress for this week and last week.
-// Run: npm run demo   (then restart nothing: the local API reads the file on every request)
+// Run: yarn demo   (then restart nothing: the local API reads the file on every request)
 import fs from 'node:fs'
 import path from 'node:path'
 import matter from 'gray-matter'
