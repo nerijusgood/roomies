@@ -11,7 +11,8 @@ export function assignmentsFor(config: Config, week: string): Record<string, str
   const n = config.areas.length
   const result: Record<string, string | null> = {}
   config.people.forEach((p, i) => {
-    const slot = mod(i + offset, Math.max(n, config.people.length))
+    const start = p.startArea ? config.areas.indexOf(p.startArea) : -1
+    const slot = mod((start >= 0 ? start : i) + offset, Math.max(n, config.people.length))
     result[p.id] = slot < n ? config.areas[slot] : null
   })
   for (const o of config.overrides.filter((x) => x.week === week)) {

@@ -1,19 +1,41 @@
 {
   "houseName": "Our home",
-  "startWeek": "2026-W40",
-  "deadline": { "weekday": 7, "time": "21:00" },
+  "startWeek": "2026-W41",
+  "deadline": {
+    "weekday": 7,
+    "time": "21:00"
+  },
   "people": [
-    { "id": "nerijus", "name": "Nerijus", "pin": "1111" },
-    { "id": "emma", "name": "Emma", "pin": "2222" },
-    { "id": "lukas", "name": "Lukas", "pin": "3333" },
-    { "id": "sofie", "name": "Sofie", "pin": "4444" }
-  ],
-  "areas": ["living-room", "kitchen", "bathroom", "hallway"],
-  "overrides": [
     {
-      "week": "2026-W44",
-      "swap": ["emma", "sofie"],
-      "note": "Emma and Sofie swapped"
+      "id": "noeleen",
+      "name": "Noeleen",
+      "pin": "1111",
+      "startArea": "floors-couch"
+    },
+    {
+      "id": "nerijus",
+      "name": "Nerijus",
+      "pin": "2222",
+      "startArea": "bathrooms"
+    },
+    {
+      "id": "agnese",
+      "name": "Agnese",
+      "pin": "3333",
+      "startArea": "kitchen-surfaces"
+    },
+    {
+      "id": "stefano",
+      "name": "Stefano",
+      "pin": "4444",
+      "startArea": "drawers-fridge"
     }
-  ]
+  ],
+  "areas": [
+    "floors-couch",
+    "drawers-fridge",
+    "kitchen-surfaces",
+    "bathrooms"
+  ],
+  "overrides": []
 }

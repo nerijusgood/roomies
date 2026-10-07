@@ -6,6 +6,8 @@ export interface Person {
   pin: string
   /** Optional seed for a different avatar face. */
   avatar?: string
+  /** Area this person has in startWeek. Defaults to the area at the same position in `areas`. */
+  startArea?: string
 }
 
 export interface Override {

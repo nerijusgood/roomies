@@ -33,7 +33,9 @@ const assignments = (week) => {
   const n = config.areas.length
   const out = {}
   config.people.forEach((p, i) => {
-    const slot = (((i + offset) % Math.max(n, config.people.length)) + Math.max(n, config.people.length)) % Math.max(n, config.people.length)
+    const st = p.startArea ? config.areas.indexOf(p.startArea) : -1
+    const base = st >= 0 ? st : i
+    const slot = (((base + offset) % Math.max(n, config.people.length)) + Math.max(n, config.people.length)) % Math.max(n, config.people.length)
     out[p.id] = slot < n ? config.areas[slot] : null
   })
   for (const o of config.overrides.filter((x) => x.week === week)) {

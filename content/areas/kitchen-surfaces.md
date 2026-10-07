@@ -1,5 +1,5 @@
 ---
-name: Kitchen
+name: Kitchen Surfaces
 short: Kitchen
 color: lavender
 doodle: pot
@@ -7,12 +7,12 @@ checklist:
   - Wipe counters and backsplash
   - Clean the hob
   - Clean the sink and tap
-  - Throw out old food from the fridge
-  - Wipe microwave inside
+  - Wipe the microwave, inside and out
+  - Wipe the table
   - Wipe cupboard fronts and handles
-  - Take out all bins
-  - Sweep and mop the floor
+  - Wipe the kettle, toaster and coffee machine
+  - Empty the kitchen bins
 ---
-The busiest room in the house. Focus on surfaces and the fridge.
+All the surfaces you can see in the kitchen.
 
 **Tip:** spray the hob first and let it soak while you do the rest.

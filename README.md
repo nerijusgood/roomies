@@ -2,7 +2,7 @@
 
 A friendly, offline-first cleaning rota for our home. Open it, see your area and deadline, tick your checklist. Everyone sees who's done.
 
-Currently **local only with demo data** (Nerijus, Emma, Lukas, Sofie).
+Currently **local only**, with our real names, areas and draft checklists.
 
 ## Run it
 
@@ -12,7 +12,7 @@ yarn demo      # optional: fill in demo progress for this week and last week
 yarn dev       # http://localhost:5173
 ```
 
-Demo PINs: Nerijus `1111`, Emma `2222`, Lukas `3333`, Sofie `4444`.
+PINs (change them in `config.json`): Noeleen `1111`, Nerijus `2222`, Agnese `3333`, Stefano `4444`.
 
 **Try it on your phone:** `yarn dev` prints a *Network* address (like `http://192.168.1.20:5173`). Open it on a phone on the same wifi. Ticks sync between phones through your Mac.
 
@@ -33,7 +33,7 @@ Other commands: `yarn test` (rotation, sync and API tests), `yarn typecheck`.
 | What | Where |
 |---|---|
 | People, PINs, area order, start week, deadline | `config.json` |
-| Swaps / someone away | `overrides` in `config.json` (`"swap": ["emma", "sofie"]` or `"assign": { "emma": null }`) |
+| Swaps / someone away | `overrides` in `config.json` (`"swap": ["stefano", "agnese"]` or `"assign": { "stefano": null }`) |
 | Areas: name, colour, doodle, checklist, tips | `content/areas/*.md` |
 | House guide pages | `content/info/*.md` |
 | Colours, radius, font | `src/styles/theme.css` |

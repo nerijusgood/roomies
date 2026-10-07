@@ -54,6 +54,20 @@ describe('rotation', () => {
     expect(assignmentsFor(config, '2026-W44')).toEqual({ a: 'hall', b: 'bath', c: 'kitchen', d: 'living' })
     expect(assignmentsFor(config, '2026-W45').a).toBeNull()
   })
+  it('respects startArea so people can be listed in any order', () => {
+    const c = {
+      ...config,
+      overrides: [],
+      people: [
+        { id: 'a', name: 'A', pin: '1', startArea: 'living' },
+        { id: 'b', name: 'B', pin: '2', startArea: 'hall' },
+        { id: 'c', name: 'C', pin: '3', startArea: 'bath' },
+        { id: 'd', name: 'D', pin: '4', startArea: 'kitchen' },
+      ],
+    }
+    expect(assignmentsFor(c, '2026-W41')).toEqual({ a: 'living', b: 'hall', c: 'bath', d: 'kitchen' })
+    expect(assignmentsFor(c, '2026-W42')).toEqual({ a: 'kitchen', b: 'living', c: 'hall', d: 'bath' })
+  })
   it('gives free weeks when there are more people than areas', () => {
     const w = assignmentsFor({ ...config, areas: ['living', 'kitchen', 'bath'], overrides: [] }, '2026-W41')
     expect(Object.values(w).filter((v) => v === null)).toHaveLength(1)

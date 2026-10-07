@@ -80,6 +80,22 @@ function Door() {
   )
 }
 
+function Fridge() {
+  return (
+    <g {...S}>
+      <path d="M40 14h36c3 0 5 2 5 5v62c0 3-2 5-5 5H40c-3 0-5-2-5-5V19c0-3 2-5 5-5z" fill={W} />
+      <path d="M35 40h46" />
+      <path d="M41 24v8M41 48v12" strokeWidth={3.2} />
+      <circle cx="66" cy="27" r="4" fill={POP} />
+      <path d="M58 56h12M58 64h8" strokeWidth={2} />
+      <path d="M88 52h22v16c0 4-3 6-6 6H94c-3 0-6-2-6-6z" fill={W} />
+      <path d="M88 60h22M99 52v8" strokeWidth={2} />
+      <path d="M28 86h64" />
+      <path d="M16 24l2 4 4 2-4 2-2 4-2-4-4-2 4-2z" strokeWidth={2} />
+    </g>
+  )
+}
+
 function Broom() {
   return (
     <g {...S}>
@@ -101,7 +117,7 @@ function Sparkle() {
   )
 }
 
-const DOODLES: Record<string, () => React.JSX.Element> = { sofa: Sofa, pot: Pot, bath: Bath, door: Door, broom: Broom, sparkle: Sparkle }
+const DOODLES: Record<string, () => React.JSX.Element> = { sofa: Sofa, pot: Pot, bath: Bath, door: Door, fridge: Fridge, broom: Broom, sparkle: Sparkle }
 
 export function Doodle({ name, ...props }: { name: string } & SVGProps<SVGSVGElement>) {
   const Cmp = DOODLES[name] ?? Sparkle
