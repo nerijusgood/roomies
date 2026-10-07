@@ -1,0 +1,19 @@
+{
+  "houseName": "Our home",
+  "startWeek": "2026-W40",
+  "deadline": { "weekday": 7, "time": "21:00" },
+  "people": [
+    { "id": "nerijus", "name": "Nerijus", "pin": "1111" },
+    { "id": "emma", "name": "Emma", "pin": "2222" },
+    { "id": "lukas", "name": "Lukas", "pin": "3333" },
+    { "id": "sofie", "name": "Sofie", "pin": "4444" }
+  ],
+  "areas": ["living-room", "kitchen", "bathroom", "hallway"],
+  "overrides": [
+    {
+      "week": "2026-W44",
+      "swap": ["emma", "sofie"],
+      "note": "Emma and Sofie swapped"
+    }
+  ]
+}

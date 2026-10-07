@@ -1,0 +1,132 @@
+/* Roomies theme: soft pastel bento
+   Tailwind v4 + shadcn/ui-style variables.
+   Font is self-hosted (@fontsource-variable/dm-sans) so it works offline. */
+@import "tailwindcss";
+@import "@fontsource-variable/dm-sans";
+
+:root {
+  /* Base */
+  --radius: 1.5rem;              /* 24px cards; pills use rounded-full */
+  --background: #F4F2EF;         /* warm off-white page */
+  --foreground: #1C1C1C;
+  --card: #FFFFFF;
+  --card-foreground: #1C1C1C;
+  --popover: #FFFFFF;
+  --popover-foreground: #1C1C1C;
+
+  /* Actions */
+  --primary: #1C1C1C;            /* black pill buttons */
+  --primary-foreground: #FFFFFF;
+  --accent: #F07A2B;             /* orange: active nav, "all done" */
+  --accent-foreground: #FFFFFF;
+  --secondary: #FFFFFF;          /* round white icon buttons */
+  --secondary-foreground: #1C1C1C;
+
+  /* Quiet stuff */
+  --muted: #EDEAE5;
+  --muted-foreground: #8A857E;
+  --border: #E8E4DE;             /* used rarely: inputs, list dividers */
+  --input: #E8E4DE;
+  --ring: #F07A2B;
+  --destructive: #E5484D;
+
+  /* Status */
+  --done: #2E9E6B;
+  --started: #E9A23B;
+  --missed: #E5484D;
+
+  /* Area pastels: fill + ink (text on that fill).
+     Pick one per area in its .md frontmatter, e.g. color: butter */
+  --butter: #FFE9A3;   --butter-ink: #6B5A1E;
+  --lavender: #E7E6FB; --lavender-ink: #55508A;
+  --peach: #FDE4DA;    --peach-ink: #8A4D35;
+  --mint: #D9F3EE;     --mint-ink: #2F6E62;
+  --cream: #FFF1DC;    --cream-ink: #8A6A35;
+  --sky: #DDEEFF;      --sky-ink: #35628A;
+}
+
+@theme inline {
+  --font-sans: "DM Sans Variable", ui-sans-serif, system-ui, sans-serif;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-destructive: var(--destructive);
+
+  --color-done: var(--done);
+  --color-started: var(--started);
+  --color-missed: var(--missed);
+
+  --color-butter: var(--butter);     --color-butter-ink: var(--butter-ink);
+  --color-lavender: var(--lavender); --color-lavender-ink: var(--lavender-ink);
+  --color-peach: var(--peach);       --color-peach-ink: var(--peach-ink);
+  --color-mint: var(--mint);         --color-mint-ink: var(--mint-ink);
+  --color-cream: var(--cream);       --color-cream-ink: var(--cream-ink);
+  --color-sky: var(--sky);           --color-sky-ink: var(--sky-ink);
+
+  /* Radius scale: sm 12 · md 18 · lg 24 · xl 32 */
+  --radius-sm: calc(var(--radius) - 12px);
+  --radius-md: calc(var(--radius) - 6px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 8px);
+}
+
+/* Small shared patterns */
+@utility tile {
+  border-radius: var(--radius-lg);
+  padding: 0.875rem;
+  min-height: 8rem;
+  display: flex;
+  flex-direction: column;
+}
+@utility hero {
+  border-radius: calc(var(--radius) + 4px);
+  padding: 1.125rem;
+  position: relative;
+  overflow: hidden;
+}
+@utility icon-btn {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@layer base {
+  html { -webkit-tap-highlight-color: transparent; }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    min-height: 100dvh;
+  }
+  button { cursor: pointer; }
+  :focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+}
+
+/* Markdown pages (info, area descriptions) */
+@layer components {
+  .md { font-size: 15px; line-height: 1.6; }
+  .md > * + * { margin-top: 0.75rem; }
+  .md strong { font-weight: 600; }
+  .md ul { list-style: disc; padding-left: 1.25rem; }
+  .md ol { list-style: decimal; padding-left: 1.25rem; }
+  .md li + li { margin-top: 0.35rem; }
+  .md table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .md th { text-align: left; font-weight: 500; color: var(--muted-foreground); }
+  .md th, .md td { padding: 0.5rem 0.25rem; border-bottom: 1px solid var(--border); }
+}
