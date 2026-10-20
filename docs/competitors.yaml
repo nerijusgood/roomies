@@ -1,0 +1,92 @@
+# Competitor data for Roomies. One entry per competitor.
+# Researched 10 Oct 2026. Prices are indicative (app stores and third-party sites).
+# Sources are listed in competitors.md.
+
+roomies:
+  positioning: Weekly cleaning rota for one shared home. No accounts, works offline.
+  price: €0 (self-hosted on Vercel Hobby + Upstash free tier)
+  platform: PWA (add to home screen)
+  languages: [en]
+  strengths: [no sign-up, fixed weekly rotation, checklist per area, offline, no ads, markdown content]
+  gaps: [no reminders, no Danish text, swaps need code, not in app stores, one home per deploy]
+
+competitors:
+  - name: Flatastic
+    type: direct
+    origin: Germany
+    positioning: All-in-one app for flatshares, couples and families
+    features: [chore rotation, shopping list, shared costs, reminders]
+    pricing:
+      free: Yes, with ads and limits
+      premium: One price covers the whole household. Annual plan 20% cheaper.
+      reported_usd: { single_month: 1.99, single_year: 18.49, household_month: 6.49, household_year: 34.99 }
+    languages_listed: [en, de]  # Danish not confirmed
+    denmark_signal: 12 ratings in the Danish App Store (AppFollow)
+    strengths: [closest feature match, household pricing, independent, no data selling]
+    weaknesses_for_dk: [account per person, ads in free tier, Danish UI not confirmed]
+
+  - name: Sweepy
+    type: direct
+    positioning: Cleaning schedule for one home, with a leaderboard
+    features: [room-based tasks, daily lists, leaderboard]
+    pricing: { free: yes, premium_usd: { month: 3.99, year: 19.99 }, trial_days: 3 }
+    sharing_free: false
+    weaknesses_for_dk: [sharing behind paywall, no weekly area rotation, English only]
+
+  - name: Tody
+    type: direct
+    positioning: Cleaning tracker that shows what needs attention
+    pricing: { free: yes, premium_usd_year: "9.99 to 30 (sources disagree)" }
+    sharing_free: false
+    weaknesses_for_dk: [built for one person or family, sync behind paywall]
+
+  - name: RoomMate
+    type: direct
+    origin: Italy
+    positioning: Bills and chores for roommates
+    claimed_users: 10000
+    denmark_signal: none found
+
+  - name: OurHome
+    type: direct
+    status: discontinued (AlternativeTo)
+
+  - name: Paper plan / kitchen rules PDF
+    type: habit
+    price: 0
+    strengths: [no install, everyone sees it, official in kollegier]
+    weaknesses: [no done status, out of date after move-outs, no reminders]
+
+  - name: Messenger / Facebook group
+    type: habit
+    price: 0
+    strengths: [everyone already uses it]
+    weaknesses: [plan gets lost in chat, reminders feel like nagging]
+
+  - name: MobilePay
+    type: adjacent (money)
+    notes: Request money and split bills. WeShare closed 1 Feb 2023.
+
+  - name: Lunar ShareIt
+    type: adjacent (money)
+    notes: Launched 2023 as a WeShare replacement. Current status not checked.
+
+  - name: Tricount
+    type: adjacent (money)
+    owner: bunq
+    pricing: free, no limits
+
+  - name: Splitwise
+    type: adjacent (money)
+    pricing: { free: daily expense limit, pro_usd_year: 40 }
+
+  - name: Cozi / Home Routines / Homey
+    type: adjacent (family)
+    notes: Built for parents and kids, not for equal roommates.
+
+market_dk:
+  youth_homes_incl_kollegier: { count: 66000, year: 2013 }
+  student_homes_cph_frb: { copenhagen: 13670, frederiksberg: 2415, year: 2020 }
+  bofaellesskaber: { communities: 400, homes: 10000, year: 2022 }
+  private_rent_premium_students: 42%  # vs public youth homes, BL 2024
+  flatshare_count: unknown

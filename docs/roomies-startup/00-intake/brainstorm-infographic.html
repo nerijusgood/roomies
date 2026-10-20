@@ -1,0 +1,273 @@
+<title>Roomies ROI Check</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700;9..40,800&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: Roomies' own soft pastel bento. One column of sections, path cards in a 3-up grid that stacks on phones. */
+:root {
+  --bg: #F4F2EF;
+  --card: #FFFFFF;
+  --fg: #1C1C1C;
+  --muted: #8A857E;
+  --line: #E8E4DE;
+  --track: #EDEAE5;
+  --accent: #F07A2B;
+  --accent-ink: #FFFFFF;
+  --missed: #E5484D;
+  --done: #2E9E6B;
+  --peach: #FDE4DA;    --peach-ink: #8A4D35;
+  --mint: #D9F3EE;     --mint-ink: #2F6E62;
+  --lavender: #E7E6FB; --lavender-ink: #55508A;
+  --butter: #FFE9A3;   --butter-ink: #6B5A1E;
+  --font-body: "DM Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-data: "DM Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --radius: 24px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #161513; --card: #211F1C; --fg: #F2EFEA; --muted: #A39E96; --line: #33302B; --track: #2C2925;
+    --accent: #F28A45; --accent-ink: #1C1C1C; --missed: #F0716F; --done: #5CC495;
+    --peach: #3A2A23; --peach-ink: #F3BFA8; --mint: #1E3532; --mint-ink: #9FDCCF;
+    --lavender: #2A2943; --lavender-ink: #C4C0F3; --butter: #3A3220; --butter-ink: #EBD58A;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #161513; --card: #211F1C; --fg: #F2EFEA; --muted: #A39E96; --line: #33302B; --track: #2C2925;
+  --accent: #F28A45; --accent-ink: #1C1C1C; --missed: #F0716F; --done: #5CC495;
+  --peach: #3A2A23; --peach-ink: #F3BFA8; --mint: #1E3532; --mint-ink: #9FDCCF;
+  --lavender: #2A2943; --lavender-ink: #C4C0F3; --butter: #3A3220; --butter-ink: #EBD58A;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: var(--font-body); font-size: 16px; line-height: 1.55;
+  padding-inline: 16px; padding-block: 32px 56px;
+}
+.wrap { max-width: 980px; margin-inline: auto; display: grid; gap: 20px; }
+h1, h2, h3 { margin: 0; text-wrap: balance; letter-spacing: -0.02em; }
+p { margin: 0; }
+.eyebrow { font-family: var(--font-data); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.num { font-family: var(--font-data); font-variant-numeric: tabular-nums; }
+.panel { background: var(--card); border-radius: var(--radius); padding: 28px; display: grid; gap: 18px; min-width: 0; }
+.lede { color: var(--muted); max-width: 62ch; }
+
+/* Hero */
+.hero { display: grid; gap: 14px; padding-block: 8px 12px; }
+.hero h1 { font-size: clamp(30px, 5vw, 46px); font-weight: 800; line-height: 1.08; max-width: 20ch; }
+.hero h1 em { font-style: normal; color: var(--accent); }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { font-size: 13px; font-weight: 500; padding: 6px 12px; border-radius: 999px; background: var(--card); }
+
+/* Math chain */
+.chain { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.step { background: var(--track); border-radius: 18px; padding: 18px; display: grid; gap: 6px; align-content: start; position: relative; }
+.step .big { font-family: var(--font-data); font-size: clamp(22px, 3vw, 28px); font-weight: 500; letter-spacing: -0.02em; line-height: 1.1; }
+.step .what { font-size: 14px; color: var(--muted); }
+.step.hot { background: var(--accent); color: var(--accent-ink); }
+.step.hot .what { color: inherit; opacity: 0.85; }
+.step:not(:last-child)::after {
+  content: "→"; position: absolute; right: -11px; top: 50%; transform: translateY(-50%);
+  width: 22px; height: 22px; border-radius: 50%; background: var(--card); color: var(--muted);
+  display: grid; place-items: center; font-size: 13px; z-index: 1;
+}
+
+/* Bar chart */
+.chart { display: grid; gap: 16px; }
+.row { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 14px; align-items: center; }
+.row .label { font-size: 14px; }
+.row .label small { display: block; color: var(--muted); font-size: 12px; }
+.bar { position: relative; height: 34px; background: var(--track); border-radius: 10px; }
+.fill { position: absolute; top: 0; bottom: 0; border-radius: 10px; display: flex; align-items: center; padding-inline: 10px; font-family: var(--font-data); font-size: 13px; white-space: nowrap; }
+.fill.need { left: 35%; width: 52.5%; background: var(--peach); color: var(--peach-ink); justify-content: center; }
+.fill.city { left: 0; width: 66.67%; background: var(--mint); color: var(--mint-ink); justify-content: flex-end; }
+.fill.pay { left: 0; width: 1.75%; min-width: 6px; background: var(--accent); }
+.payval { position: absolute; left: calc(1.75% + 12px); top: 50%; transform: translateY(-50%); font-family: var(--font-data); font-size: 13px; color: var(--muted); white-space: nowrap; }
+.axis { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 14px; }
+.ticks { position: relative; height: 18px; font-family: var(--font-data); font-size: 11px; color: var(--muted); }
+.ticks span { position: absolute; transform: translateX(-50%); }
+.ticks span:first-child { transform: none; }
+.ticks span:last-child { transform: translateX(-100%); }
+.callout { border-left: 4px solid var(--missed); padding: 4px 0 4px 14px; font-weight: 500; }
+
+/* Paths */
+.paths { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.path { border-radius: var(--radius); padding: 22px; display: grid; gap: 14px; align-content: start; }
+.path.a { background: var(--peach); color: var(--peach-ink); }
+.path.b { background: var(--mint); color: var(--mint-ink); }
+.path.c { background: var(--lavender); color: var(--lavender-ink); }
+.path .tag { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.letter { font-family: var(--font-data); font-size: 13px; font-weight: 500; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: var(--card); color: var(--fg); }
+.verdict { font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 999px; background: var(--card); color: var(--fg); }
+.path h3 { font-size: 20px; font-weight: 700; color: var(--fg); }
+.path .need-n { font-family: var(--font-data); font-size: 30px; line-height: 1; color: var(--fg); }
+.path .need-n small { display: block; font-family: var(--font-body); font-size: 13px; margin-top: 6px; color: inherit; }
+.path dl { margin: 0; display: grid; gap: 10px; font-size: 14px; }
+.path dt { font-size: 11px; font-family: var(--font-data); text-transform: uppercase; letter-spacing: 0.07em; opacity: 0.8; }
+.path dd { margin: 0; color: var(--fg); }
+
+/* Table */
+.scroll { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; min-width: 620px; font-size: 14px; }
+th, td { text-align: left; padding: 12px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+thead th { font-family: var(--font-data); font-weight: 500; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+tbody th { font-weight: 500; color: var(--muted); width: 26%; }
+tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
+.dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+.dot.lo { background: var(--done); } .dot.mid { background: #E9A23B; } .dot.hi { background: var(--missed); }
+
+/* Gap + questions */
+.split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 20px; }
+.users { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.u { background: var(--track); border-radius: 16px; padding: 14px; display: grid; gap: 4px; }
+.u .num { font-size: 30px; line-height: 1; }
+.u .what { font-size: 13px; color: var(--muted); }
+.u.zero .num { color: var(--missed); }
+.u.goal { background: var(--butter); color: var(--butter-ink); }
+.u.goal .what { color: inherit; }
+ol.qs { margin: 0; padding: 0; list-style: none; display: grid; gap: 12px; counter-reset: q; }
+ol.qs li { counter-increment: q; display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 12px; align-items: start; }
+ol.qs li::before { content: counter(q); font-family: var(--font-data); width: 34px; height: 34px; border-radius: 50%; background: var(--fg); color: var(--bg); display: grid; place-items: center; font-size: 14px; }
+ol.qs strong { display: block; font-weight: 700; }
+ol.qs span { color: var(--muted); font-size: 14px; }
+footer { color: var(--muted); font-size: 13px; text-align: center; padding-top: 8px; }
+code { font-family: var(--font-data); font-size: 0.92em; }
+
+@media (max-width: 760px) {
+  .chain { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .step:nth-child(2)::after { display: none; }
+  .paths, .split { grid-template-columns: minmax(0, 1fr); }
+  .row, .axis { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+  .axis > :first-child { display: none; }
+  .panel { padding: 22px; }
+}
+@media (max-width: 420px) {
+  .chain { grid-template-columns: minmax(0, 1fr); }
+  .step::after { display: none; }
+}
+</style>
+
+<main class="wrap">
+
+  <header class="hero">
+    <span class="eyebrow">Startup design · Fast Track · Brainstorm · 10 Oct 2026</span>
+    <h1>A Copenhagen flatshare subscription <em>cannot pay for your evenings.</em></h1>
+    <p class="lede">So the return must come from an operator who pays, or it is not money. All numbers on this page are rough estimates for comparing paths. They are not forecasts.</p>
+    <div class="chips">
+      <span class="chip">Founder: solo engineer</span>
+      <span class="chip">Time: evenings and weekends</span>
+      <span class="chip">Market: Copenhagen first, then Scandinavia</span>
+    </div>
+  </header>
+
+  <section class="panel" aria-labelledby="math">
+    <span class="eyebrow">The ROI math</span>
+    <h2 id="math">What it takes to earn 100,000 DKK a year from households</h2>
+    <div class="chain">
+      <div class="step"><span class="big">370 h</span><span class="what">your time per year at 8 h a week</span></div>
+      <div class="step"><span class="big">240 DKK</span><span class="what">per household per year, the Flatastic price</span></div>
+      <div class="step"><span class="big">420</span><span class="what">paying households to reach 100,000 DKK</span></div>
+      <div class="step hot"><span class="big">8,400–21,000</span><span class="what">active households, if 2 to 5% pay</span></div>
+    </div>
+
+    <div class="chart" role="img" aria-label="Bar chart. Active households needed: 8,400 to 21,000. All student homes in Copenhagen and Frederiksberg: about 16,000. Paying households needed: 420.">
+      <div class="row">
+        <div class="label">Active households needed<small>2 to 5% conversion</small></div>
+        <div class="bar"><div class="fill need">8,400 – 21,000</div></div>
+      </div>
+      <div class="row">
+        <div class="label">All student homes in Cph + Frb<small>2020, not all shared</small></div>
+        <div class="bar"><div class="fill city">≈ 16,000</div></div>
+      </div>
+      <div class="row">
+        <div class="label">Paying households needed<small>at 240 DKK a year</small></div>
+        <div class="bar"><div class="fill pay"></div><span class="payval">420</span></div>
+      </div>
+      <div class="axis" aria-hidden="true">
+        <div></div>
+        <div class="ticks"><span style="left:0">0</span><span style="left:33.33%">8k</span><span style="left:66.67%">16k</span><span style="left:100%">24k</span></div>
+      </div>
+    </div>
+    <p class="callout">The households you need are about the same as every student home in the city.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="paths">
+    <span class="eyebrow">Three paths</span>
+    <h2 id="paths">Who pays, and how many of them you need</h2>
+    <div class="paths">
+      <article class="path a">
+        <div class="tag"><span class="letter">A</span><span class="verdict">Weak math</span></div>
+        <h3>Flatshare app with a paid house plan</h3>
+        <div class="need-n">≈ 420<small>paying households for 100k DKK</small></div>
+        <dl>
+          <div><dt>Who pays</dt><dd>Households, about 20 to 25 DKK a month</dd></div>
+          <div><dt>Good</dt><dd>You know the problem first-hand. No sign-up beats Flatastic.</dd></div>
+          <div><dt>Hard</dt><dd>Needs a big share of the city. Chore apps lose users after a few weeks.</dd></div>
+        </dl>
+      </article>
+      <article class="path b">
+        <div class="tag"><span class="letter">B</span><span class="verdict">Best money, biggest build</span></div>
+        <h3>Sell to coliving and student housing operators</h3>
+        <div class="need-n">2–5<small>operators, 1,000 rooms at 10 to 20 DKK a month</small></div>
+        <dl>
+          <div><dt>Who pays</dt><dd>The operator. Residents use it free, with no accounts.</dd></div>
+          <div><dt>Good</dt><dd>Few customers. No accounts fits residents who move every semester.</dd></div>
+          <div><dt>Hard</dt><dd>Multi-home build and admin dashboard. B2B sales next to a full-time job. No operator asked yet.</dd></div>
+        </dl>
+      </article>
+      <article class="path c">
+        <div class="tag"><span class="letter">C</span><span class="verdict">Cheapest test</span></div>
+        <h3>Open-source template and case study</h3>
+        <div class="need-n">20–40 h<small>one-off effort, no revenue</small></div>
+        <dl>
+          <div><dt>Who pays</dt><dd>Nobody. The return is portfolio, reputation and leads.</dd></div>
+          <div><dt>Good</dt><dd>Tests demand for free with stars, forks and messages. Does not block A or B.</dd></div>
+          <div><dt>Hard</dt><dd>No money. Non-technical homes cannot deploy it.</dd></div>
+        </dl>
+      </article>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="compare">
+    <span class="eyebrow">Side by side</span>
+    <h2 id="compare">How the paths compare</h2>
+    <div class="scroll">
+      <table>
+        <thead><tr><th></th><th>A · Flatshare app</th><th>B · Operators</th><th>C · Template</th></tr></thead>
+        <tbody>
+          <tr><th>Build time to first test</th><td><span class="dot mid"></span>Medium: reminders, Danish, swaps in app</td><td><span class="dot hi"></span>High: multi-home, admin</td><td><span class="dot lo"></span>Low</td></tr>
+          <tr><th>Who pays</th><td>Households</td><td>Operators</td><td>Nobody</td></tr>
+          <tr><th>Customers for 100k DKK a year</th><td class="num">≈ 420 paying, 8,000+ active</td><td class="num">2 to 5</td><td>Not applicable</td></tr>
+          <tr><th>Fit with evenings and weekends</th><td><span class="dot mid"></span>Medium</td><td><span class="dot mid"></span>Low for sales, high for build</td><td><span class="dot lo"></span>High</td></tr>
+          <tr><th>Main unknown</th><td>Do households pay at all?</td><td>Do operators feel the pain?</td><td>Does anyone care?</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="split">
+    <div class="panel" aria-labelledby="gap">
+      <span class="eyebrow">The gap</span>
+      <h2 id="gap">Nobody outside your home has used it yet</h2>
+      <div class="users">
+        <div class="u"><span class="num">4</span><span class="what">users, all in your home</span></div>
+        <div class="u zero"><span class="num">0</span><span class="what">talks with people outside</span></div>
+        <div class="u goal"><span class="num">3+</span><span class="what">talks needed before strategy</span></div>
+      </div>
+      <p class="lede">The rota started in week 41, this week. After the first month, nobody knows yet if your household keeps using it.</p>
+    </div>
+    <div class="panel" aria-labelledby="ask">
+      <span class="eyebrow">Your move</span>
+      <h2 id="ask">Three answers to finish the brainstorm</h2>
+      <ol class="qs">
+        <li><div><strong>Which path, or which mix?</strong><span>For example C first as a cheap test, then B.</span></div></li>
+        <li><div><strong>What is one evening hour worth to you, in DKK?</strong><span>This sets a fixed bar for ROI.</span></div></li>
+        <li><div><strong>Do you know anyone at a coliving or student housing company in Copenhagen?</strong><span>Path B lives or dies on this.</span></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <footer>Files: <code>docs/roomies-startup/00-intake/brainstorm.md</code>, <code>brief.md</code>, <code>preflight.md</code> · Sources: Flatastic pricing, BL UngdomsboligRapporten 2024, Folketinget answer on student homes 2020</footer>
+</main>

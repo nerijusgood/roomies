@@ -37,7 +37,7 @@ export function RoomieChecklist() {
               {entry.person.name} · week {weekNumber(week)}
               {week === current ? ' (now)' : ''}
             </p>
-            <h1 className="text-2xl font-medium leading-tight">{entry.area?.name ?? 'Free week'}</h1>
+            <h1 className="text-2xl font-medium leading-tight">{entry.allAreas ? 'All areas' : (entry.area?.name ?? 'Free week')}</h1>
           </div>
         </div>
         {entry.area && (
@@ -55,12 +55,17 @@ export function RoomieChecklist() {
 
       {entry.area && (
         <>
-          <div className="mt-3 rounded-lg bg-card px-4 py-1">
-            {entry.area.checklist.map((item) => {
-              const s = ticks[item.id]
-              return <CheckRow key={item.id} text={item.text} checked={Boolean(s?.done)} stamp={s?.done ? formatStamp(s.at) : undefined} readOnly />
-            })}
-          </div>
+          {entry.sections.map((section) => (
+            <div key={section.area.id}>
+              {entry.allAreas && <h2 className="mb-1 mt-5 px-1 text-lg font-medium">{section.area.name}</h2>}
+              <div className="mt-3 rounded-lg bg-card px-4 py-1">
+                {section.items.map((item) => {
+                  const st = ticks[item.key]
+                  return <CheckRow key={item.key} text={item.text} checked={Boolean(st?.done)} stamp={st?.done ? formatStamp(st.at) : undefined} readOnly />
+                })}
+              </div>
+            </div>
+          ))}
           <p className="mt-3 text-center text-xs text-muted-foreground">View only · you can't tick for others</p>
         </>
       )}

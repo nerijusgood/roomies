@@ -37,5 +37,14 @@
     "kitchen-surfaces",
     "bathrooms"
   ],
-  "overrides": []
+  "overrides": [],
+  "solo": {
+    "from": "2026-W44",
+    "order": [
+      "nerijus",
+      "agnese",
+      "stefano",
+      "noeleen"
+    ]
+  }
 }

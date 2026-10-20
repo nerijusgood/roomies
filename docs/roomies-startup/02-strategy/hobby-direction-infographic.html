@@ -1,0 +1,342 @@
+<title>Roomies Hobby Direction</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700;9..40,800&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: Roomies' own soft pastel bento. A staircase of levels, then positioning, build order, costs and next steps as stacked panels. */
+:root {
+  --bg: #F4F2EF; --card: #FFFFFF; --fg: #1C1C1C; --muted: #8A857E; --line: #E8E4DE; --track: #EDEAE5;
+  --accent: #F07A2B; --accent-ink: #FFFFFF; --missed: #E5484D; --done: #2E9E6B; --started: #E9A23B;
+  --peach: #FDE4DA; --peach-ink: #8A4D35; --mint: #D9F3EE; --mint-ink: #2F6E62;
+  --lavender: #E7E6FB; --lavender-ink: #55508A; --butter: #FFE9A3; --butter-ink: #6B5A1E;
+  --sky: #DDEEFF; --sky-ink: #35628A;
+  --font-body: "DM Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-data: "DM Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --radius: 24px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #161513; --card: #211F1C; --fg: #F2EFEA; --muted: #A39E96; --line: #33302B; --track: #2C2925;
+    --accent: #F28A45; --accent-ink: #1C1C1C; --missed: #F0716F; --done: #5CC495; --started: #F0B65A;
+    --peach: #3A2A23; --peach-ink: #F3BFA8; --mint: #1E3532; --mint-ink: #9FDCCF;
+    --lavender: #2A2943; --lavender-ink: #C4C0F3; --butter: #3A3220; --butter-ink: #EBD58A;
+    --sky: #1F2D3B; --sky-ink: #A9CBEE;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #161513; --card: #211F1C; --fg: #F2EFEA; --muted: #A39E96; --line: #33302B; --track: #2C2925;
+  --accent: #F28A45; --accent-ink: #1C1C1C; --missed: #F0716F; --done: #5CC495; --started: #F0B65A;
+  --peach: #3A2A23; --peach-ink: #F3BFA8; --mint: #1E3532; --mint-ink: #9FDCCF;
+  --lavender: #2A2943; --lavender-ink: #C4C0F3; --butter: #3A3220; --butter-ink: #EBD58A;
+  --sky: #1F2D3B; --sky-ink: #A9CBEE;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 16px; line-height: 1.55; padding-inline: 16px; padding-block: 32px 56px; }
+.wrap { max-width: 1000px; margin-inline: auto; display: grid; gap: 20px; }
+h1, h2, h3 { margin: 0; text-wrap: balance; letter-spacing: -0.02em; }
+p { margin: 0; }
+ul { margin: 0; padding: 0; list-style: none; }
+.eyebrow { font-family: var(--font-data); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.panel { background: var(--card); border-radius: var(--radius); padding: 28px; display: grid; gap: 18px; min-width: 0; }
+.lede { color: var(--muted); max-width: 64ch; }
+.num { font-family: var(--font-data); font-variant-numeric: tabular-nums; }
+code { font-family: var(--font-data); font-size: 0.92em; }
+
+/* Hero */
+.hero { display: grid; gap: 14px; padding-block: 8px 12px; }
+.hero h1 { font-size: clamp(30px, 5vw, 46px); font-weight: 800; line-height: 1.08; max-width: 22ch; }
+.hero h1 em { font-style: normal; color: var(--accent); }
+.stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.stat { background: var(--card); border-radius: 18px; padding: 16px 18px; display: grid; gap: 2px; }
+.stat .num { font-size: 26px; font-weight: 500; line-height: 1.15; }
+.stat span:last-child { font-size: 13px; color: var(--muted); }
+
+/* Staircase */
+.stairs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; align-items: end; }
+.lvl { border-radius: 18px; padding: 16px; display: grid; gap: 8px; align-content: start; position: relative; }
+.lvl:nth-child(1) { min-height: 190px; background: var(--peach); color: var(--peach-ink); }
+.lvl:nth-child(2) { min-height: 225px; background: var(--butter); color: var(--butter-ink); }
+.lvl:nth-child(3) { min-height: 260px; background: var(--mint); color: var(--mint-ink); }
+.lvl:nth-child(4) { min-height: 295px; background: var(--lavender); color: var(--lavender-ink); }
+.lvl:nth-child(5) { min-height: 330px; background: var(--sky); color: var(--sky-ink); }
+.lvl .n { font-family: var(--font-data); font-size: 12px; letter-spacing: 0.06em; }
+.lvl h3 { font-size: 17px; color: var(--fg); }
+.lvl .reach { font-family: var(--font-data); font-size: 18px; color: var(--fg); line-height: 1.2; }
+.lvl .reach small { display: block; font-family: var(--font-body); font-size: 12px; color: inherit; margin-top: 2px; }
+.lvl p { font-size: 13px; }
+.lvl .unlock { font-size: 12px; border-top: 1px solid currentColor; padding-top: 8px; opacity: 0.9; }
+.badge { justify-self: start; font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 999px; background: var(--card); color: var(--fg); }
+.badge.hot { background: var(--accent); color: var(--accent-ink); }
+.note { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 14px; color: var(--muted); }
+.note b { color: var(--fg); font-weight: 700; }
+
+/* Positioning */
+.vs { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 16px; align-items: stretch; }
+.side { border-radius: 18px; padding: 20px; display: grid; gap: 12px; align-content: start; }
+.side.old { background: var(--track); }
+.side.new { background: var(--accent); color: var(--accent-ink); }
+.side h3 { font-size: 18px; }
+.side li { font-size: 14px; padding-left: 20px; position: relative; }
+.side.old li::before { content: "×"; position: absolute; left: 0; color: var(--missed); font-weight: 700; }
+.side.new li::before { content: "✓"; position: absolute; left: 0; font-weight: 700; }
+.arrow { display: grid; place-items: center; font-family: var(--font-data); color: var(--muted); font-size: 22px; }
+.tagline { display: grid; gap: 6px; padding: 20px; border-radius: 18px; border: 2px dashed var(--line); }
+.tagline .en { font-size: clamp(20px, 3vw, 26px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.2; }
+.tagline .da { color: var(--muted); font-size: 15px; }
+.proof { font-size: 14px; }
+.proof b { color: var(--accent); }
+
+/* Build order */
+.build { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.col { display: grid; gap: 8px; align-content: start; }
+.col .head { font-family: var(--font-data); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; padding: 6px 10px; border-radius: 999px; justify-self: start; }
+.col:nth-child(1) .head { background: var(--peach); color: var(--peach-ink); }
+.col:nth-child(2) .head { background: var(--butter); color: var(--butter-ink); }
+.col:nth-child(3) .head { background: var(--mint); color: var(--mint-ink); }
+.col:nth-child(4) .head { background: var(--lavender); color: var(--lavender-ink); }
+.feat { background: var(--track); border-radius: 14px; padding: 12px 14px; display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 10px; }
+.feat .i { font-family: var(--font-data); font-size: 12px; width: 26px; height: 26px; border-radius: 50%; background: var(--fg); color: var(--bg); display: grid; place-items: center; }
+.feat b { display: block; font-size: 14px; line-height: 1.3; }
+.feat span { font-size: 12px; color: var(--muted); }
+.feat.star { background: var(--accent); color: var(--accent-ink); }
+.feat.star span { color: inherit; opacity: 0.85; }
+.feat.star .i { background: var(--accent-ink); color: var(--accent); }
+.skip { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.skip .eyebrow { margin-right: 4px; }
+.nope { font-size: 13px; padding: 6px 12px; border-radius: 999px; background: var(--track); text-decoration: line-through; text-decoration-color: var(--missed); text-decoration-thickness: 2px; }
+.nope small { text-decoration: none; display: inline-block; color: var(--muted); margin-left: 4px; }
+
+/* Costs */
+.costgrid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 20px; }
+.chart { display: grid; gap: 14px; }
+.row { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 12px; align-items: center; }
+.row .label { font-size: 14px; }
+.row .label small { display: block; color: var(--muted); font-size: 12px; }
+.bar { position: relative; height: 32px; background: var(--track); border-radius: 10px; }
+.fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 10px; display: flex; align-items: center; justify-content: flex-end; padding-inline: 10px; font-family: var(--font-data); font-size: 13px; white-space: nowrap; }
+.fill.redis { width: 25%; background: var(--mint); color: var(--mint-ink); }
+.fill.vercel { width: 50%; background: var(--sky); color: var(--sky-ink); }
+.fill.push { width: 100%; background: var(--lavender); color: var(--lavender-ink); }
+.axis { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 12px; }
+.ticks { position: relative; height: 18px; font-family: var(--font-data); font-size: 11px; color: var(--muted); }
+.ticks span { position: absolute; transform: translateX(-50%); }
+.ticks span:first-child { transform: none; }
+.ticks span:last-child { transform: translateX(-100%); }
+.zero { background: var(--done); color: #FFFFFF; border-radius: 18px; padding: 18px; display: grid; gap: 2px; }
+.zero .num { font-size: 32px; line-height: 1.1; }
+.zero span:last-child { font-size: 13px; opacity: 0.9; }
+.prices { display: grid; gap: 10px; align-content: start; }
+.price { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; align-items: baseline; padding-bottom: 10px; border-bottom: 1px solid var(--line); font-size: 14px; }
+.price:last-child { border-bottom: 0; }
+.price small { display: block; color: var(--muted); font-size: 12px; }
+.price .num { font-size: 15px; text-align: right; }
+.warn { background: var(--butter); color: var(--butter-ink); border-radius: 18px; padding: 16px 18px; font-size: 14px; display: grid; gap: 6px; }
+.warn b { color: var(--fg); }
+
+/* Risks + next */
+.split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; }
+.risk { display: grid; grid-template-columns: 10px minmax(0, 1fr); gap: 12px; font-size: 14px; }
+.risk::before { content: ""; width: 10px; border-radius: 5px; }
+.risk.hi::before { background: var(--missed); }
+.risk.mid::before { background: var(--started); }
+.risk b { display: block; font-size: 15px; }
+.risk span { color: var(--muted); }
+.risks { display: grid; gap: 14px; }
+ol.steps { margin: 0; padding: 0; list-style: none; display: grid; gap: 12px; counter-reset: s; }
+ol.steps li { counter-increment: s; display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 12px; align-items: start; font-size: 14px; }
+ol.steps li::before { content: counter(s); font-family: var(--font-data); width: 34px; height: 34px; border-radius: 50%; background: var(--fg); color: var(--bg); display: grid; place-items: center; }
+ol.steps b { display: block; font-size: 15px; }
+ol.steps span { color: var(--muted); }
+ol.steps li.gate::before { background: var(--accent); color: var(--accent-ink); }
+footer { color: var(--muted); font-size: 13px; text-align: center; padding-top: 8px; }
+
+@media (max-width: 860px) {
+  .stairs { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; }
+  .lvl:nth-child(n) { min-height: 0; }
+  .lvl:nth-child(5) { grid-column: 1 / -1; }
+  .build { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .costgrid, .split { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 600px) {
+  .stats, .stairs, .build { grid-template-columns: minmax(0, 1fr); }
+  .vs { grid-template-columns: minmax(0, 1fr); }
+  .arrow { transform: rotate(90deg); }
+  .row, .axis { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+  .axis > :first-child { display: none; }
+  .panel { padding: 22px; }
+}
+</style>
+
+<main class="wrap">
+
+  <header class="hero">
+    <span class="eyebrow">Startup design · Hobby direction · 10 Oct 2026</span>
+    <h1>A free service that a few hundred Copenhagen homes use <em>every week.</em></h1>
+    <p class="lede">Roomies is a hobby, so money and your time do not count. Success is homes that keep using it. The questions that matter now are setup and whether people keep opening it. Reach numbers are opinions. Cost numbers are estimates from the code.</p>
+    <div class="stats">
+      <div class="stat"><span class="num">100–1,000</span><span>homes in Copenhagen in 1 to 2 years, a guess</span></div>
+      <div class="stat"><span class="num">0 DKK</span><span>to run, up to about 250 homes (plus a domain)</span></div>
+      <div class="stat"><span class="num">≈ $4/mo</span><span>Redis at 1,000 homes</span></div>
+    </div>
+  </header>
+
+  <section class="panel" aria-labelledby="levels">
+    <span class="eyebrow">What is possible</span>
+    <h2 id="levels">Five levels. Each one needs the level before it.</h2>
+    <div class="stairs">
+      <div class="lvl">
+        <span class="n">LEVEL 1</span>
+        <h3>Your home</h3>
+        <div class="reach">1 home<small>the four of you</small></div>
+        <p class="unlock">Deploy, reminders, final checklists</p>
+      </div>
+      <div class="lvl">
+        <span class="n">LEVEL 2</span>
+        <h3>Friends' homes</h3>
+        <div class="reach">5–20<small>homes you set up by hand</small></div>
+        <p class="unlock">One deploy for many homes</p>
+      </div>
+      <div class="lvl">
+        <span class="badge">Big jump</span>
+        <span class="n">LEVEL 3</span>
+        <h3>Free hosted service</h3>
+        <div class="reach">100–1,000<small>homes, by word of mouth</small></div>
+        <p class="unlock">Make a home in 2 minutes, Danish, templates</p>
+      </div>
+      <div class="lvl">
+        <span class="badge hot">Best fit</span>
+        <span class="n">LEVEL 4</span>
+        <h3>Kollegium kitchens</h3>
+        <div class="reach">10–16<small>rooms per kitchen, spread by the kitchen meeting</small></div>
+        <p class="unlock">Kitchen mode: pairs, more people than areas, move-in and move-out</p>
+      </div>
+      <div class="lvl">
+        <span class="n">LEVEL 5</span>
+        <h3>Scandinavia</h3>
+        <div class="reach">Unknown<small>same app, new languages</small></div>
+        <p class="unlock">Swedish and Norwegian text</p>
+      </div>
+    </div>
+    <div class="note"><span><b>Big jump:</b> from level 2 to 3, a person who cannot code must be able to run a home.</span><span><b>Best fit:</b> kitchens already rotate weekly and change people every semester.</span></div>
+  </section>
+
+  <section class="panel" aria-labelledby="pos">
+    <span class="eyebrow">Positioning</span>
+    <h2 id="pos">Do not fight Flatastic. Replace the paper plan on the fridge.</h2>
+    <div class="vs">
+      <div class="side old">
+        <h3>Today: fridge plan + group chat</h3>
+        <ul>
+          <li>Nobody sees who is done</li>
+          <li>Out of date after someone moves</li>
+          <li>"Clean the kitchen" means different things</li>
+          <li>Reminders in the chat feel like nagging</li>
+        </ul>
+      </div>
+      <div class="arrow" aria-hidden="true">→</div>
+      <div class="side new">
+        <h3>Roomies: the fridge plan, made live</h3>
+        <ul>
+          <li>No accounts: a link and a 4-digit PIN</li>
+          <li>A checklist that says what "done" means here</li>
+          <li>Everyone sees who is done, live</li>
+          <li>Offline, free, no ads, friendly tone</li>
+        </ul>
+      </div>
+    </div>
+    <div class="tagline">
+      <span class="eyebrow">Draft one-liner</span>
+      <span class="en">Your fridge cleaning plan, on everyone's phone. No sign-up.</span>
+      <span class="da">Rengøringsplanen fra køleskabet, nu på alles telefon. Uden login.</span>
+    </div>
+    <p class="proof">Target: shared homes of 3 to 16 equals with a weekly rotation, where people move often. <b>Proof to get:</b> one kollegium kitchen that uses it for a full semester.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="feat">
+    <span class="eyebrow">Features, in build order</span>
+    <h2 id="feat">Build so each step unlocks the next level</h2>
+    <div class="build">
+      <div class="col">
+        <span class="head">Level 1 · Your home</span>
+        <div class="feat star"><span class="i">1</span><div><b>Deploy + reminders</b><span>Sat morning, Sun afternoon. When nobody opens a chore app, it dies.</span></div></div>
+        <div class="feat"><span class="i">2</span><div><b>Swap and away in the app</b><span>No developer needed each week</span></div></div>
+      </div>
+      <div class="col">
+        <span class="head">Level 2 · Friends</span>
+        <div class="feat"><span class="i">3</span><div><b>PIN check on the server</b><span>Plus one house code per home</span></div></div>
+        <div class="feat"><span class="i">4</span><div><b>Many homes, one deploy</b><span><code>homes/&lt;id&gt;</code> in Redis</span></div></div>
+      </div>
+      <div class="col">
+        <span class="head">Level 3 · Anyone</span>
+        <div class="feat star"><span class="i">5</span><div><b>Make a home in 2 minutes</b><span>Names, areas from templates, start week</span></div></div>
+        <div class="feat"><span class="i">6</span><div><b>Danish and English</b><span>Most target homes speak Danish</span></div></div>
+        <div class="feat"><span class="i">7</span><div><b>Checklist editor + templates</b><span>Kitchen, bathroom, kollegium kitchen</span></div></div>
+        <div class="feat star"><span class="i">8</span><div><b>Fridge poster with QR</b><span>The paper plan becomes the way in</span></div></div>
+      </div>
+      <div class="col">
+        <span class="head">Level 4–5 · Kitchens, Nordics</span>
+        <div class="feat"><span class="i">9</span><div><b>Kitchen mode</b><span>Pairs, more people than areas, move-in and move-out</span></div></div>
+        <div class="feat"><span class="i">10</span><div><b>Swedish and Norwegian</b><span>Same product, new market</span></div></div>
+      </div>
+    </div>
+    <div class="skip">
+      <span class="eyebrow">Do not build</span>
+      <span class="nope">Money splitting<small>MobilePay does it</small></span>
+      <span class="nope">Chat<small>group chat exists</small></span>
+      <span class="nope">Leaderboards<small>turn into blame</small></span>
+      <span class="nope">Native store apps<small>PWA is enough</small></span>
+      <span class="nope">Personal accounts<small>kills the main advantage</small></span>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="cost">
+    <span class="eyebrow">Running costs</span>
+    <h2 id="cost">Free until about 250 homes</h2>
+    <p class="lede">One home of 4 people uses about 2,000 server calls and 2,000 Redis commands a month. This comes from the 30-second sync in the code, not from a measurement.</p>
+    <div class="costgrid">
+      <div class="chart" role="img" aria-label="Homes that fit in each free tier. Upstash Redis: about 250. Vercel Hobby: about 500. Web push: no practical limit.">
+        <div class="row"><div class="label">Upstash Redis<small>500k commands/mo</small></div><div class="bar"><div class="fill redis">≈ 250</div></div></div>
+        <div class="row"><div class="label">Vercel Hobby<small>1M calls/mo</small></div><div class="bar"><div class="fill vercel">≈ 500</div></div></div>
+        <div class="row"><div class="label">Web push<small>own VAPID keys</small></div><div class="bar"><div class="fill push">no limit that matters</div></div></div>
+        <div class="axis" aria-hidden="true"><div></div><div class="ticks"><span style="left:0">0</span><span style="left:25%">250</span><span style="left:50%">500</span><span style="left:75%">750</span><span style="left:100%">1,000 homes</span></div></div>
+        <div class="zero"><span class="num">0 DKK / month</span><span>up to about 250 homes. Redis is the first limit you hit.</span></div>
+      </div>
+      <div class="prices">
+        <div class="price"><div>Domain<small>needed for a real link</small></div><span class="num">≈ 100 DKK/yr</span></div>
+        <div class="price"><div>Redis past the free tier<small>$0.20 per 100k commands</small></div><span class="num">≈ $4/mo at 1k homes</span></div>
+        <div class="price"><div>Vercel Pro<small>only for commercial use or heavy load</small></div><span class="num">$20/mo</span></div>
+        <div class="price"><div>Google Play as a TWA<small>optional Android wrapper of the PWA</small></div><span class="num">$25 once</span></div>
+        <div class="price"><div>Apple App Store<small>optional</small></div><span class="num">$99/yr</span></div>
+        <div class="warn"><span><b>Hobby plan rules.</b> No commercial use, so ads or a paid plan need Pro or another host.</span><span>Cron runs at most once a day. Two daily jobs cover the Saturday and Sunday reminders.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="split">
+    <div class="panel" aria-labelledby="risk">
+      <span class="eyebrow">Risks</span>
+      <h2 id="risk">What can stop it</h2>
+      <div class="risks">
+        <div class="risk hi"><div><b>People stop opening it</b><span>Chore apps lose users after a few weeks. Test reminders and the fridge poster.</span></div></div>
+        <div class="risk hi"><div><b>Setup takes too long</b><span>If paper is faster, homes stay on paper.</span></div></div>
+        <div class="risk mid"><div><b>Abuse on a public service</b><span>Keep homes private by link and code. Rate-limit home creation.</span></div></div>
+        <div class="risk mid"><div><b>Personal data</b><span>Names and tick times fall under GDPR. A privacy page and a "delete this home" button cover it.</span></div></div>
+      </div>
+    </div>
+    <div class="panel" aria-labelledby="next">
+      <span class="eyebrow">Next steps</span>
+      <h2 id="next">From your home to the next one</h2>
+      <ol class="steps">
+        <li><div><b>Ship level 1</b><span>Deploy, change the PINs, reminders, swaps in the app.</span></div></li>
+        <li><div><b>Run it at home for 4 weeks</b><span>Write down who opens it without a reminder from you.</span></div></li>
+        <li><div><b>Give it to 2 outside groups</b><span>One friend's flatshare and one kollegium kitchen rep.</span></div></li>
+        <li class="gate"><div><b>Gate: build level 3?</b><span>After 4 weeks, if at least one of them still uses it, yes.</span></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <footer>Full text: <code>docs/roomies-startup/02-strategy/hobby-direction.md</code> · Sources: Upstash Redis pricing, Vercel limits and cron docs, own competitor research</footer>
+</main>

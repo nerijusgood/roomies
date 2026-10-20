@@ -1,0 +1,497 @@
+<title>Roomies Competitor Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700;9..40,800&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a pastel bento board, like the Roomies app. Tiles read top to bottom:
+   thesis, market, the real rival, prices, features, best fit, next steps. */
+:root {
+  --bg: #F4F2EF;
+  --card: #FFFFFF;
+  --fg: #1C1C1C;
+  --fg-2: #57534D;
+  --fg-3: #8A857E;
+  --line: #E8E4DE;
+  --track: #EDEAE5;
+  --accent: #F07A2B;
+  --accent-ink: #B4500F;
+  --bar: #8A857E;
+  --pill-bg: #1C1C1C;
+  --pill-fg: #FFFFFF;
+
+  --butter: #FFE9A3;   --butter-ink: #6B5A1E;
+  --lavender: #E7E6FB; --lavender-ink: #55508A;
+  --peach: #FDE4DA;    --peach-ink: #8A4D35;
+  --mint: #D9F3EE;     --mint-ink: #2F6E62;
+  --cream: #FFF1DC;    --cream-ink: #8A6A35;
+  --sky: #DDEEFF;      --sky-ink: #35628A;
+
+  --font-display: "DM Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-body: "DM Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-data: "DM Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --r: 24px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #151413; --card: #211F1D; --fg: #F4F2EF; --fg-2: #C9C3BA; --fg-3: #9C968E;
+    --line: #34312D; --track: #2C2A27; --accent: #F28A43; --accent-ink: #F6A66F; --bar: #8F8981;
+    --pill-bg: #F4F2EF; --pill-fg: #151413;
+    --butter: #3A3320;   --butter-ink: #F2DC8E;
+    --lavender: #2A2940; --lavender-ink: #C9C5F5;
+    --peach: #3D2A22;    --peach-ink: #F5BFA8;
+    --mint: #1E3632;     --mint-ink: #A6E3D6;
+    --cream: #3A3020;    --cream-ink: #F0D3A3;
+    --sky: #1F2E3D;      --sky-ink: #A9CDF2;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #151413; --card: #211F1D; --fg: #F4F2EF; --fg-2: #C9C3BA; --fg-3: #9C968E;
+  --line: #34312D; --track: #2C2A27; --accent: #F28A43; --accent-ink: #F6A66F; --bar: #8F8981;
+  --pill-bg: #F4F2EF; --pill-fg: #151413;
+  --butter: #3A3320;   --butter-ink: #F2DC8E;
+  --lavender: #2A2940; --lavender-ink: #C9C5F5;
+  --peach: #3D2A22;    --peach-ink: #F5BFA8;
+  --mint: #1E3632;     --mint-ink: #A6E3D6;
+  --cream: #3A3020;    --cream-ink: #F0D3A3;
+  --sky: #1F2E3D;      --sky-ink: #A9CDF2;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 1080px; margin: 0 auto; padding-inline: 16px; padding-block: 28px 48px; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; }
+p { margin: 0; }
+.eyebrow {
+  font-family: var(--font-data); font-size: 11.5px; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--fg-3);
+}
+.board { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 12px; }
+.tile { background: var(--card); border-radius: var(--r); padding: 22px; min-width: 0; display: flex; flex-direction: column; gap: 14px; }
+.span-12 { grid-column: span 12; } .span-8 { grid-column: span 8; } .span-7 { grid-column: span 7; }
+.span-6 { grid-column: span 6; } .span-5 { grid-column: span 5; } .span-4 { grid-column: span 4; }
+@media (max-width: 860px) { .span-8, .span-7, .span-6, .span-5, .span-4 { grid-column: span 12; } }
+
+/* Masthead */
+.mast { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 17px; }
+.brand-dot { width: 28px; height: 28px; border-radius: 50%; background: var(--accent); display: grid; place-items: center; color: #fff; font-weight: 800; font-size: 14px; }
+.pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; background: var(--pill-bg); color: var(--pill-fg); font-size: 12.5px; font-weight: 500; }
+
+/* Hero */
+.hero { background: var(--butter); color: var(--butter-ink); padding: 28px; position: relative; overflow: hidden; }
+.hero h1 { font-size: clamp(30px, 5.2vw, 54px); line-height: 1.02; font-weight: 800; letter-spacing: -0.025em; max-width: 15ch; color: var(--fg); }
+.hero .lede { font-size: 17px; max-width: 52ch; color: var(--butter-ink); }
+.hero-stats { display: flex; flex-wrap: wrap; gap: 28px; margin-top: 6px; }
+.big { font-family: var(--font-display); font-weight: 800; font-size: clamp(48px, 8vw, 84px); line-height: .9; letter-spacing: -0.04em; color: var(--fg); font-variant-numeric: tabular-nums; }
+.big-cap { font-size: 13.5px; max-width: 22ch; margin-top: 6px; }
+.fridge {
+  position: absolute; right: 26px; top: 26px; width: 190px; transform: rotate(3deg);
+  background: var(--card); color: var(--fg); border-radius: 6px; padding: 14px 14px 12px;
+  box-shadow: 0 10px 24px rgba(60, 45, 10, .12);
+  font-family: var(--font-data); font-size: 11.5px; line-height: 1.55;
+}
+.fridge::before { content: ""; position: absolute; top: -8px; left: 50%; width: 16px; height: 16px; margin-left: -8px; border-radius: 50%; background: var(--accent); }
+.fridge b { display: block; font-family: var(--font-body); font-size: 12px; margin-bottom: 6px; }
+.fridge .row { display: flex; justify-content: space-between; border-bottom: 1px dashed var(--line); padding-block: 2px; }
+.fridge .q { color: var(--fg-3); }
+@media (max-width: 860px) { .fridge { display: none; } }
+
+/* Charts (HTML bars, one scale per chart) */
+.chart { display: grid; gap: 10px; }
+.crow { display: grid; grid-template-columns: minmax(7.5rem, 11rem) minmax(0, 1fr) 4.8rem; align-items: center; gap: 12px; }
+.clabel { font-size: 13.5px; font-weight: 500; line-height: 1.25; }
+.clabel small { display: block; font-weight: 400; color: var(--fg-3); font-size: 12px; }
+.plot { position: relative; height: 26px; }
+.plot .grid { position: absolute; inset: 0; background-image: linear-gradient(to right, var(--line) 1px, transparent 1px); background-size: 25% 100%; }
+.bar { position: absolute; top: 5px; height: 16px; border-radius: 0 4px 4px 0; background: var(--bar); cursor: default; }
+.bar:hover, .bar:focus-visible { filter: brightness(1.08); outline: 2px solid var(--fg); outline-offset: 2px; }
+.bar.hl { background: var(--accent); }
+.bar.range { border-radius: 4px; background: repeating-linear-gradient(135deg, var(--bar) 0 3px, transparent 3px 6px); box-shadow: inset 0 0 0 1.5px var(--bar); }
+.bar.sky { background: var(--sky-ink); }
+.zero { position: absolute; top: 5px; left: -1px; width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--bar); background: var(--card); }
+.zero.hl { border-color: var(--accent); background: var(--accent); }
+.cval { font-family: var(--font-data); font-size: 13px; text-align: right; font-variant-numeric: tabular-nums; color: var(--fg); }
+.axis { display: grid; grid-template-columns: minmax(7.5rem, 11rem) minmax(0, 1fr) 4.8rem; gap: 12px; }
+.ticks { position: relative; height: 16px; font-family: var(--font-data); font-size: 11px; color: var(--fg-3); }
+.ticks span { position: absolute; transform: translateX(-50%); }
+.ticks span:first-child { transform: none; }
+.ticks span:last-child { transform: translateX(-100%); }
+.note { font-size: 12.5px; color: var(--fg-3); }
+.tag { display: inline-block; font-size: 11px; font-weight: 500; padding: 1px 7px; border-radius: 999px; background: var(--track); color: var(--fg-2); margin-left: 4px; vertical-align: 1px; }
+@media (max-width: 480px) {
+  .crow, .axis { grid-template-columns: 6.6rem minmax(0, 1fr) 3.9rem; gap: 8px; }
+  .clabel { font-size: 12.5px; }
+}
+
+/* Stat tiles */
+.stat { justify-content: space-between; }
+.stat .big { font-size: clamp(44px, 6vw, 64px); }
+.t-sky { background: var(--sky); color: var(--sky-ink); }
+.t-peach { background: var(--peach); color: var(--peach-ink); }
+.t-mint { background: var(--mint); color: var(--mint-ink); }
+.t-lav { background: var(--lavender); color: var(--lavender-ink); }
+.t-cream { background: var(--cream); color: var(--cream-ink); }
+.t-sky .eyebrow, .t-peach .eyebrow, .t-mint .eyebrow, .t-lav .eyebrow, .t-cream .eyebrow { color: inherit; opacity: .8; }
+
+/* Habits */
+.habits { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 860px) { .habits { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 480px) { .habits { grid-template-columns: minmax(0, 1fr); } }
+.habit { border: 1px solid var(--line); border-radius: 18px; padding: 14px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.habit h3 { font-size: 15px; font-weight: 700; }
+.habit .pro, .habit .con { font-size: 13px; display: flex; gap: 6px; }
+.habit .pro { color: var(--fg-2); }
+.habit .con { color: var(--fg-2); }
+.mk { flex: none; width: 16px; text-align: center; font-weight: 700; }
+.mk.p { color: var(--mint-ink); } .mk.c { color: var(--peach-ink); }
+
+/* Feature matrix */
+.mx-wrap { overflow-x: auto; margin-inline: -4px; }
+table.mx { width: 100%; border-collapse: collapse; min-width: 520px; font-size: 13.5px; }
+.mx th, .mx td { padding: 9px 8px; text-align: center; border-bottom: 1px solid var(--line); }
+.mx th:first-child, .mx td:first-child { text-align: left; }
+.mx thead th { font-size: 12.5px; font-weight: 700; vertical-align: bottom; }
+.mx thead th.us { color: var(--accent-ink); }
+.mx td.us { background: color-mix(in srgb, var(--accent) 9%, transparent); }
+.mx thead th.us { background: color-mix(in srgb, var(--accent) 9%, transparent); border-radius: 12px 12px 0 0; }
+.dot { display: inline-block; width: 14px; height: 14px; border-radius: 50%; vertical-align: -2px; }
+.dot.y { background: var(--fg); }
+.dot.p { background: linear-gradient(90deg, var(--fg) 50%, transparent 50%); box-shadow: inset 0 0 0 2px var(--fg); }
+.dot.n { box-shadow: inset 0 0 0 2px var(--fg-3); }
+.dot.u { box-shadow: inset 0 0 0 2px var(--fg-3); position: relative; }
+.dot.u::after { content: "?"; position: absolute; inset: 0; font-size: 10px; line-height: 14px; font-weight: 700; color: var(--fg-3); text-align: center; }
+.mx td small { display: block; font-size: 11px; color: var(--fg-3); line-height: 1.2; margin-top: 2px; }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12.5px; color: var(--fg-2); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+
+/* Fit + steps */
+.fit { background: var(--mint); color: var(--mint-ink); }
+.fit h2, .steps h2 { color: var(--fg); }
+.fit ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.fit li { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 10px; align-items: start; font-size: 14px; }
+.fit li i { font-style: normal; width: 26px; height: 26px; border-radius: 50%; background: var(--card); color: var(--mint-ink); display: grid; place-items: center; font-size: 13px; font-weight: 700; }
+.fit li b { color: var(--fg); font-weight: 700; }
+.quote { font-family: var(--font-data); font-size: 12px; padding: 12px 14px; border-radius: 14px; background: var(--card); color: var(--fg-2); line-height: 1.55; }
+
+.steps ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; counter-reset: s; }
+.steps li { counter-increment: s; display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 12px; align-items: start; padding: 12px; border-radius: 16px; background: var(--bg); }
+.steps li::before { content: counter(s); width: 34px; height: 34px; border-radius: 50%; background: var(--pill-bg); color: var(--pill-fg); display: grid; place-items: center; font-weight: 700; font-size: 14px; }
+.steps li:first-child::before { background: var(--accent); color: #fff; }
+.steps li b { display: block; font-size: 14.5px; }
+.steps li span { font-size: 13px; color: var(--fg-2); }
+.status { font-family: var(--font-data); font-size: 11px; padding: 1px 7px; border-radius: 999px; margin-left: 6px; vertical-align: 1px; }
+.status.done { background: var(--mint); color: var(--mint-ink); }
+
+.dont { background: var(--peach); color: var(--peach-ink); }
+.dont h2 { color: var(--fg); }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { background: var(--card); color: var(--fg); border-radius: 999px; padding: 6px 12px; font-size: 13px; font-weight: 500; }
+.chip small { color: var(--fg-3); font-weight: 400; margin-left: 4px; }
+
+h2 { font-size: 21px; font-weight: 800; letter-spacing: -0.01em; line-height: 1.15; }
+.sub { font-size: 14px; color: var(--fg-2); max-width: 62ch; }
+.t-sky .sub, .t-peach .sub, .t-mint .sub, .fit .sub, .dont .sub { color: inherit; }
+
+details { font-size: 13px; color: var(--fg-2); }
+details summary { cursor: pointer; font-weight: 500; color: var(--fg); }
+details table { border-collapse: collapse; margin-top: 8px; width: 100%; }
+details td, details th { text-align: left; padding: 5px 8px 5px 0; border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+
+footer { margin-top: 18px; display: grid; gap: 10px; font-size: 12.5px; color: var(--fg-3); }
+footer a { color: var(--fg-2); }
+footer p { max-width: 90ch; }
+
+#tip {
+  position: fixed; z-index: 10; pointer-events: none; max-width: 240px;
+  background: var(--pill-bg); color: var(--pill-fg); border-radius: 12px; padding: 8px 10px;
+  font-size: 12.5px; line-height: 1.4; box-shadow: 0 6px 18px rgba(0,0,0,.18);
+}
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (prefers-reduced-motion: no-preference) {
+  .bar { transform-origin: left; animation: grow .7s cubic-bezier(.2,.7,.2,1) both; }
+  @keyframes grow { from { transform: scaleX(.2); } to { transform: scaleX(1); } }
+}
+</style>
+
+<div class="wrap">
+  <div class="mast">
+    <div class="brand"><span class="brand-dot" aria-hidden="true">R</span> Roomies</div>
+    <span class="pill">Competitor research · Denmark · Oct 2026</span>
+  </div>
+
+  <main class="board">
+    <!-- Thesis -->
+    <section class="tile hero span-12" aria-labelledby="h-hero">
+      <span class="eyebrow">The finding</span>
+      <h1 id="h-hero">In Danish shared homes, the fridge plan wins.</h1>
+      <p class="lede">No Danish chore app for shared homes came up in the research. The international apps are in the Danish App Store, but few Danes rate them. Roomies has to beat paper, a PDF and the group chat.</p>
+      <div class="hero-stats">
+        <div><div class="big">0</div><p class="big-cap">Danish chore apps for shared homes found</p></div>
+        <div><div class="big">12</div><p class="big-cap">ratings for Flatastic, the closest rival, in the Danish App Store</p></div>
+      </div>
+      <div class="fridge" aria-hidden="true">
+        <b>Køkkenplan · uge 41</b>
+        <div class="row"><span>Komfur + ovn</span><span>vær. 3</span></div>
+        <div class="row"><span>Køleskab</span><span>vær. 7</span></div>
+        <div class="row"><span>Gulv</span><span>vær. 11</span></div>
+        <div class="row"><span>Done?</span><span class="q">??</span></div>
+      </div>
+    </section>
+
+    <!-- Market -->
+    <section class="tile span-8" aria-labelledby="h-market">
+      <span class="eyebrow">The market</span>
+      <h2 id="h-market">Where Danes share a kitchen</h2>
+      <p class="sub">Denmark has no official count of flatshares. These are the niches with numbers. Years differ, so do not add them up.</p>
+      <div class="chart" role="list">
+        <div class="crow" role="listitem">
+          <div class="clabel">Youth homes incl. kollegier<small>All of Denmark, 2013</small></div>
+          <div class="plot"><div class="grid"></div><div class="bar sky" style="width:100%" tabindex="0" data-tip="About 66,000 youth homes including kollegier, all of Denmark (Socialstyrelsen, 2013)"></div></div>
+          <div class="cval">66,000</div>
+        </div>
+        <div class="crow" role="listitem">
+          <div class="clabel">Student homes<small>Copenhagen + Frederiksberg, 2020</small></div>
+          <div class="plot"><div class="grid"></div><div class="bar sky" style="width:24.4%" tabindex="0" data-tip="13,670 in Copenhagen + 2,415 in Frederiksberg (ministry answer to Folketinget, 2020)"></div></div>
+          <div class="cval">16,085</div>
+        </div>
+        <div class="crow" role="listitem">
+          <div class="clabel">Bofællesskab homes<small>About 400 communities, 2022</small></div>
+          <div class="plot"><div class="grid"></div><div class="bar sky" style="width:15.2%" tabindex="0" data-tip="About 10,000 homes in about 400 co-housing communities (BUILD, Aalborg University, 2022)"></div></div>
+          <div class="cval">10,000</div>
+        </div>
+      </div>
+      <div class="axis" aria-hidden="true"><span></span><div class="ticks"><span style="left:0">0</span><span style="left:25%">16.5k</span><span style="left:50%">33k</span><span style="left:75%">49.5k</span><span style="left:100%">66k</span></div><span></span></div>
+    </section>
+
+    <section class="tile stat t-sky span-4" aria-labelledby="h-ratio">
+      <span class="eyebrow">Copenhagen, 2024</span>
+      <div>
+        <div class="big" id="h-ratio">1 : 12</div>
+        <p class="sub" style="margin-top:8px">One public youth home for every 12 students. The rest rent privately or share.</p>
+      </div>
+      <p class="note" style="color:inherit;opacity:.8">BL UngdomsboligRapporten 2024</p>
+    </section>
+
+    <section class="tile stat t-peach span-4" aria-labelledby="h-rent">
+      <span class="eyebrow">Students are price-sensitive</span>
+      <div>
+        <div class="big" id="h-rent">+42%</div>
+        <p class="sub" style="margin-top:8px">Rent per person for students in private rentals, compared with public youth homes. A paid chore app is a hard sell.</p>
+      </div>
+      <p class="note" style="color:inherit;opacity:.8">BL UngdomsboligRapporten 2024</p>
+    </section>
+
+    <!-- Habits -->
+    <section class="tile span-8" aria-labelledby="h-habits">
+      <span class="eyebrow">The real rival</span>
+      <h2 id="h-habits">Habits, not apps</h2>
+      <div class="habits">
+        <div class="habit">
+          <h3>Fridge plan</h3>
+          <p class="pro"><span class="mk p" aria-label="Strength">+</span>Free, everyone sees it</p>
+          <p class="con"><span class="mk c" aria-label="Weakness">−</span>Does not show what is done. Out of date after move-outs.</p>
+        </div>
+        <div class="habit">
+          <h3>Kitchen rules PDF</h3>
+          <p class="pro"><span class="mk p" aria-label="Strength">+</span>Official in every kollegium</p>
+          <p class="con"><span class="mk c" aria-label="Weakness">−</span>Says what to do, not who does it this week</p>
+        </div>
+        <div class="habit">
+          <h3>Messenger group</h3>
+          <p class="pro"><span class="mk p" aria-label="Strength">+</span>Everyone already has it</p>
+          <p class="con"><span class="mk c" aria-label="Weakness">−</span>The plan gets lost. Reminders feel like nagging.</p>
+        </div>
+        <div class="habit">
+          <h3>Google Sheets</h3>
+          <p class="pro"><span class="mk p" aria-label="Strength">+</span>Free and flexible</p>
+          <p class="con"><span class="mk c" aria-label="Weakness">−</span>Bad on a phone. One person keeps it alive.</p>
+        </div>
+      </div>
+      <p class="note">The bar to clear: opening Roomies must be faster than walking to the fridge.</p>
+    </section>
+
+    <!-- Prices -->
+    <section class="tile span-7" aria-labelledby="h-price">
+      <span class="eyebrow">What a shared home pays</span>
+      <h2 id="h-price">Yearly price for the whole house</h2>
+      <p class="sub">USD per year, indicative, from app stores and third-party sites. Hover a bar for details.</p>
+      <div class="chart" role="list">
+        <div class="crow" role="listitem">
+          <div class="clabel">Splitwise Pro<small>Money app</small></div>
+          <div class="plot"><div class="grid"></div><div class="bar" style="width:100%" tabindex="0" data-tip="Splitwise Pro: $40/year. The free plan limits new expenses per day."></div></div>
+          <div class="cval">$40</div>
+        </div>
+        <div class="crow" role="listitem">
+          <div class="clabel">Flatastic<small>Household plan</small></div>
+          <div class="plot"><div class="grid"></div><div class="bar" style="width:87.5%" tabindex="0" data-tip="Flatastic: about $35/year for the whole household (user-reported). Free version has ads."></div></div>
+          <div class="cval">~$35</div>
+        </div>
+        <div class="crow" role="listitem">
+          <div class="clabel">Tody<small>Sync is paid</small></div>
+          <div class="plot"><div class="grid"></div><div class="bar range" style="left:25%;width:50%" tabindex="0" data-tip="Tody: $10 to $30/year. Sources disagree. Household sync needs Premium."></div></div>
+          <div class="cval">$10–30</div>
+        </div>
+        <div class="crow" role="listitem">
+          <div class="clabel">Sweepy<small>Sharing is paid</small></div>
+          <div class="plot"><div class="grid"></div><div class="bar" style="width:50%" tabindex="0" data-tip="Sweepy: $19.99/year or $3.99/month. Sharing with a household needs Premium."></div></div>
+          <div class="cval">$20</div>
+        </div>
+        <div class="crow" role="listitem">
+          <div class="clabel">Tricount<small>Money app</small></div>
+          <div class="plot"><div class="grid"></div><div class="zero" tabindex="0" data-tip="Tricount (bunq): free, no limits, no ads."></div></div>
+          <div class="cval">Free</div>
+        </div>
+        <div class="crow" role="listitem">
+          <div class="clabel" style="color:var(--accent-ink)">Roomies<small>Self-hosted</small></div>
+          <div class="plot"><div class="grid"></div><div class="zero hl" tabindex="0" data-tip="Roomies: €0 on Vercel Hobby + Upstash free tier. No ads."></div></div>
+          <div class="cval" style="color:var(--accent-ink)">€0</div>
+        </div>
+      </div>
+      <div class="axis" aria-hidden="true"><span></span><div class="ticks"><span style="left:0">$0</span><span style="left:25%">$10</span><span style="left:50%">$20</span><span style="left:75%">$30</span><span style="left:100%">$40</span></div><span></span></div>
+      <details>
+        <summary>Show as table</summary>
+        <table>
+          <tr><th>App</th><th>Price per year</th><th>Note</th></tr>
+          <tr><td>Splitwise Pro</td><td>$40</td><td>Free plan has a daily expense limit</td></tr>
+          <tr><td>Flatastic</td><td>about $35</td><td>Household plan, user-reported</td></tr>
+          <tr><td>Tody</td><td>$10 to $30</td><td>Sources disagree</td></tr>
+          <tr><td>Sweepy</td><td>$19.99</td><td>Or $3.99 per month</td></tr>
+          <tr><td>Tricount</td><td>$0</td><td>No limits</td></tr>
+          <tr><td>Roomies</td><td>€0</td><td>Self-hosted free tiers</td></tr>
+        </table>
+      </details>
+    </section>
+
+    <section class="tile span-5" aria-labelledby="h-rival">
+      <span class="eyebrow">Closest app rival</span>
+      <h2 id="h-rival">Flatastic</h2>
+      <p class="sub">German, independent, no data selling. Chores, shopping list and shared costs in one app, one price for the whole home.</p>
+      <div class="chips">
+        <span class="chip">Account per person</span>
+        <span class="chip">Ads when free</span>
+        <span class="chip">Danish UI <small>not confirmed</small></span>
+      </div>
+      <p class="note">Sweepy and Tody are built for one person or a family. Neither rotates areas between people. OurHome is listed as discontinued.</p>
+    </section>
+
+    <!-- Features -->
+    <section class="tile span-12" aria-labelledby="h-mx">
+      <span class="eyebrow">Side by side</span>
+      <h2 id="h-mx">Where Roomies is ahead, and where it is behind</h2>
+      <div class="legend" aria-label="Legend">
+        <span><i class="dot y"></i>Yes</span>
+        <span><i class="dot p"></i>Partly or paid</span>
+        <span><i class="dot n"></i>No</span>
+        <span><i class="dot u"></i>Not confirmed</span>
+      </div>
+      <div class="mx-wrap">
+        <table class="mx">
+          <thead><tr><th scope="col">Feature</th><th scope="col" class="us">Roomies</th><th scope="col">Flatastic</th><th scope="col">Sweepy</th><th scope="col">Fridge plan</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">No sign-up</th><td class="us"><i class="dot y" aria-label="Yes"></i><small>name + PIN</small></td><td><i class="dot n" aria-label="No"></i></td><td><i class="dot n" aria-label="No"></i></td><td><i class="dot y" aria-label="Yes"></i></td></tr>
+            <tr><th scope="row">Weekly rotation of areas</th><td class="us"><i class="dot y" aria-label="Yes"></i><small>automatic</small></td><td><i class="dot y" aria-label="Yes"></i></td><td><i class="dot n" aria-label="No"></i></td><td><i class="dot p" aria-label="Partly"></i><small>by hand</small></td></tr>
+            <tr><th scope="row">Checklist per area</th><td class="us"><i class="dot y" aria-label="Yes"></i></td><td><i class="dot p" aria-label="Paid"></i><small>notes, Premium</small></td><td><i class="dot y" aria-label="Yes"></i></td><td><i class="dot p" aria-label="Partly"></i><small>sometimes</small></td></tr>
+            <tr><th scope="row">See who is done</th><td class="us"><i class="dot y" aria-label="Yes"></i><small>live</small></td><td><i class="dot y" aria-label="Yes"></i></td><td><i class="dot p" aria-label="Paid"></i><small>Premium</small></td><td><i class="dot n" aria-label="No"></i></td></tr>
+            <tr><th scope="row">Works offline</th><td class="us"><i class="dot y" aria-label="Yes"></i></td><td><i class="dot p" aria-label="Partly"></i></td><td><i class="dot p" aria-label="Partly"></i></td><td><i class="dot y" aria-label="Yes"></i></td></tr>
+            <tr><th scope="row">Free for the whole house</th><td class="us"><i class="dot y" aria-label="Yes"></i><small>€0, no ads</small></td><td><i class="dot p" aria-label="Partly"></i><small>with ads</small></td><td><i class="dot n" aria-label="No"></i></td><td><i class="dot y" aria-label="Yes"></i></td></tr>
+            <tr><th scope="row">Reminders</th><td class="us"><i class="dot n" aria-label="No"></i></td><td><i class="dot y" aria-label="Yes"></i></td><td><i class="dot y" aria-label="Yes"></i></td><td><i class="dot n" aria-label="No"></i></td></tr>
+            <tr><th scope="row">Danish text</th><td class="us"><i class="dot n" aria-label="No"></i></td><td><i class="dot u" aria-label="Not confirmed"></i></td><td><i class="dot n" aria-label="No"></i></td><td><i class="dot y" aria-label="Yes"></i></td></tr>
+            <tr><th scope="row">Swap or away without code</th><td class="us"><i class="dot n" aria-label="No"></i></td><td><i class="dot y" aria-label="Yes"></i></td><td><i class="dot y" aria-label="Yes"></i></td><td><i class="dot y" aria-label="Yes"></i><small>with a pen</small></td></tr>
+            <tr><th scope="row">In the App Store</th><td class="us"><i class="dot n" aria-label="No"></i><small>web app</small></td><td><i class="dot y" aria-label="Yes"></i></td><td><i class="dot y" aria-label="Yes"></i></td><td><i class="dot n" aria-label="No"></i></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Best fit -->
+    <section class="tile fit span-6" aria-labelledby="h-fit">
+      <span class="eyebrow">Best fit</span>
+      <h2 id="h-fit">The kollegium kitchen</h2>
+      <ul>
+        <li><i aria-hidden="true">↻</i><span><b>Rotation is already the rule.</b> The weekly kitchen clean moves between rooms, the same model as Roomies.</span></li>
+        <li><i aria-hidden="true">✓</i><span><b>Everyone must take part.</b> Seeing who is done is the whole point.</span></li>
+        <li><i aria-hidden="true">⇄</i><span><b>People move every semester.</b> No accounts means a new roommate joins with one link and a PIN.</span></li>
+        <li><i aria-hidden="true">✎</i><span><b>Each kitchen votes on its own rules.</b> Markdown checklists can copy them word for word.</span></li>
+      </ul>
+      <p class="quote">GJK kollegium kitchen rules: weekly clean rotates between rooms, everyone takes part, extra rules are voted at the kitchen meeting.</p>
+    </section>
+
+    <section class="tile steps span-6" aria-labelledby="h-steps">
+      <span class="eyebrow">To win kitchens, build in this order</span>
+      <h2 id="h-steps">Four steps</h2>
+      <ol>
+        <li><div><b>Reminders</b><span>Every competitor has them. Saturday morning and Sunday afternoon.</span></div></li>
+        <li><div><b>Danish text</b><span>The fridge plan is in Danish. Roomies is not.</span></div></li>
+        <li><div><b>People and swaps in the app</b><span>No developer needed when someone moves in or is away.</span></div></li>
+        <li><div><b>Setup page for a new kitchen</b><span>More people than areas already works.<span class="status done">ready</span></span></div></li>
+      </ol>
+    </section>
+
+    <section class="tile dont span-12" aria-labelledby="h-dont">
+      <span class="eyebrow">Skip</span>
+      <h2 id="h-dont">Do not compete on money</h2>
+      <p class="sub">Danes already split costs for free. A link to MobilePay from a future shopping list is enough.</p>
+      <div class="chips">
+        <span class="chip">MobilePay <small>everyone has it</small></span>
+        <span class="chip">Tricount <small>free, no limits</small></span>
+        <span class="chip">Lunar ShareIt <small>WeShare replacement</small></span>
+        <span class="chip">Splitwise <small>free plan capped</small></span>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Research by web search on 10 Oct 2026. Prices are indicative and come from app stores and third-party sites. The Flatastic Danish UI, kitchen sizes and tools used by kollegium administrators are not confirmed. Full notes are in competitors.md.</p>
+    <p>Sources:
+      <a href="https://www.flatastic-app.com/en/premium/">Flatastic Premium</a> ·
+      <a href="https://apps.appfollow.io/ios/flatastic-chore-checklist/840810742?country=dk">Flatastic DK ratings</a> ·
+      <a href="https://justuseapp.com/en/app/840810742/flatastic-the-roommate-app/reviews">Flatastic prices</a> ·
+      <a href="https://www.apppricinglab.com/app/apple/1498897320">Sweepy prices</a> ·
+      <a href="https://www.wilx.com/2025/11/11/what-tech-app-day-tody-app/">Tody</a> ·
+      <a href="https://alternativeto.net/software/ourhome/about/">OurHome</a> ·
+      <a href="https://www.itvoice.in/splitwise-has-introduced-restrictions-on-the-number-of-free-expenses-users-can-add">Splitwise</a> ·
+      <a href="https://tricount.com/press">Tricount</a> ·
+      <a href="https://www.skagenonline.dk/faq/er-mobilepay-box-det-samme-som-weshare">MobilePay WeShare</a> ·
+      <a href="https://gjk.dk/media/qwtncibn/koekkenreglement-2020-danskengelsk.pdf">GJK kitchen rules</a> ·
+      <a href="https://bl.dk/media/gs1p3e24/ungdomsboligrapporten-2024.pdf">BL 2024</a> ·
+      <a href="https://www.ft.dk/samling/20201/almdel/bou/spm/313/svar/1802540/2434136.pdf">Student homes 2020</a> ·
+      <a href="https://vbn.aau.dk/ws/portalfiles/portal/490617571/Kortlaegning_og_analyse_af_bofaellesskaber_i_Danmark.pdf">BUILD 2022</a>
+    </p>
+  </footer>
+</div>
+
+<div id="tip" hidden></div>
+<script>
+(function () {
+  var tip = document.getElementById('tip');
+  function show(el) {
+    tip.textContent = el.getAttribute('data-tip');
+    tip.hidden = false;
+    var r = el.getBoundingClientRect();
+    var w = tip.offsetWidth, h = tip.offsetHeight;
+    var x = Math.min(Math.max(8, r.left + r.width / 2 - w / 2), window.innerWidth - w - 8);
+    var y = r.top - h - 8;
+    if (y < 8) y = r.bottom + 8;
+    tip.style.left = x + 'px';
+    tip.style.top = y + 'px';
+  }
+  function hide() { tip.hidden = true; }
+  document.querySelectorAll('[data-tip]').forEach(function (el) {
+    el.setAttribute('aria-label', el.getAttribute('data-tip'));
+    el.addEventListener('pointerenter', function () { show(el); });
+    el.addEventListener('pointerleave', hide);
+    el.addEventListener('focus', function () { show(el); });
+    el.addEventListener('blur', hide);
+  });
+  window.addEventListener('scroll', hide, { passive: true });
+})();
+</script>

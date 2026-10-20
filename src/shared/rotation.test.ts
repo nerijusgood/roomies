@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { Config } from './types'
-import { assignmentsFor, countdown, deadlineOf, statusOf } from './rotation'
+import { areasFor, assignmentsFor, cleanerFor, countdown, deadlineOf, isSoloWeek, statusOf } from './rotation'
 import { addWeeks, mondayOf, weekId, weeksBetween } from './week'
 import { mergeTicks, finishedAt } from './ticks'
 import { handlePostTicks, handleGetWeek, type TickStore } from '../../server/logic'
@@ -71,6 +71,26 @@ describe('rotation', () => {
   it('gives free weeks when there are more people than areas', () => {
     const w = assignmentsFor({ ...config, areas: ['living', 'kitchen', 'bath'], overrides: [] }, '2026-W41')
     expect(Object.values(w).filter((v) => v === null)).toHaveLength(1)
+  })
+})
+
+describe('solo rota (one person cleans all areas)', () => {
+  const solo: Config = { ...config, overrides: [], solo: { from: '2026-W44', order: ['b', 'c', 'd', 'a'] } }
+  it('keeps the old rotation before the start week', () => {
+    expect(isSoloWeek(solo, '2026-W43')).toBe(false)
+    expect(areasFor(solo, '2026-W43').a).toEqual(['bath'])
+  })
+  it('gives one person every area and the rest none', () => {
+    expect(areasFor(solo, '2026-W44')).toEqual({ a: [], b: ['living', 'kitchen', 'bath', 'hall'], c: [], d: [] })
+  })
+  it('each person cleans every fourth week', () => {
+    const order = Array.from({ length: 8 }, (_, i) => cleanerFor(solo, addWeeks('2026-W44', i)))
+    expect(order).toEqual(['b', 'c', 'd', 'a', 'b', 'c', 'd', 'a'])
+  })
+  it('cleaner override swaps the duty', () => {
+    const c = { ...solo, overrides: [{ week: '2026-W45', cleaner: 'a' }] }
+    expect(cleanerFor(c, '2026-W45')).toBe('a')
+    expect(cleanerFor(c, '2026-W46')).toBe('d')
   })
 })
 

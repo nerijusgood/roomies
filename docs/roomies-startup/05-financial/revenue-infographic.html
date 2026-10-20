@@ -1,0 +1,241 @@
+<title>Roomies Money Routes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700;9..40,800&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: Roomies' soft pastel bento. Hero answer, one log-scale range chart of income per route, route cards, then the path and the rules. */
+:root {
+  --bg: #F4F2EF; --card: #FFFFFF; --fg: #1C1C1C; --muted: #8A857E; --line: #E8E4DE; --track: #EDEAE5;
+  --accent: #F07A2B; --accent-ink: #FFFFFF; --missed: #E5484D; --done: #2E9E6B; --started: #E9A23B;
+  --peach: #FDE4DA; --peach-ink: #8A4D35; --mint: #D9F3EE; --mint-ink: #2F6E62;
+  --lavender: #E7E6FB; --lavender-ink: #55508A; --butter: #FFE9A3; --butter-ink: #6B5A1E;
+  --sky: #DDEEFF; --sky-ink: #35628A;
+  --font-body: "DM Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-data: "DM Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --radius: 24px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #161513; --card: #211F1C; --fg: #F2EFEA; --muted: #A39E96; --line: #33302B; --track: #2C2925;
+    --accent: #F28A45; --accent-ink: #1C1C1C; --missed: #F0716F; --done: #5CC495; --started: #F0B65A;
+    --peach: #3A2A23; --peach-ink: #F3BFA8; --mint: #1E3532; --mint-ink: #9FDCCF;
+    --lavender: #2A2943; --lavender-ink: #C4C0F3; --butter: #3A3220; --butter-ink: #EBD58A;
+    --sky: #1F2D3B; --sky-ink: #A9CBEE;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #161513; --card: #211F1C; --fg: #F2EFEA; --muted: #A39E96; --line: #33302B; --track: #2C2925;
+  --accent: #F28A45; --accent-ink: #1C1C1C; --missed: #F0716F; --done: #5CC495; --started: #F0B65A;
+  --peach: #3A2A23; --peach-ink: #F3BFA8; --mint: #1E3532; --mint-ink: #9FDCCF;
+  --lavender: #2A2943; --lavender-ink: #C4C0F3; --butter: #3A3220; --butter-ink: #EBD58A;
+  --sky: #1F2D3B; --sky-ink: #A9CBEE;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 16px; line-height: 1.55; padding-inline: 16px; padding-block: 32px 56px; }
+.wrap { max-width: 1000px; margin-inline: auto; display: grid; gap: 20px; }
+h1, h2, h3 { margin: 0; text-wrap: balance; letter-spacing: -0.02em; }
+p { margin: 0; }
+ul { margin: 0; padding: 0; list-style: none; }
+.eyebrow { font-family: var(--font-data); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.panel { background: var(--card); border-radius: var(--radius); padding: 28px; display: grid; gap: 18px; min-width: 0; }
+.lede { color: var(--muted); max-width: 66ch; }
+.num { font-family: var(--font-data); font-variant-numeric: tabular-nums; }
+code { font-family: var(--font-data); font-size: 0.92em; }
+
+/* Hero */
+.hero { display: grid; gap: 14px; padding-block: 8px 12px; }
+.hero h1 { font-size: clamp(30px, 5vw, 46px); font-weight: 800; line-height: 1.08; max-width: 22ch; }
+.hero h1 em { font-style: normal; color: var(--accent); }
+.stage { justify-self: start; font-size: 13px; font-weight: 500; padding: 6px 12px; border-radius: 999px; background: var(--butter); color: var(--butter-ink); }
+.stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.stat { background: var(--card); border-radius: 18px; padding: 16px 18px; display: grid; gap: 2px; }
+.stat .num { font-size: 26px; font-weight: 500; line-height: 1.15; }
+.stat span:last-child { font-size: 13px; color: var(--muted); }
+.stat.hot { background: var(--accent); color: var(--accent-ink); }
+.stat.hot span:last-child { color: inherit; opacity: 0.85; }
+
+/* Log chart */
+.chart { display: grid; gap: 12px; }
+.row { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 12px; align-items: center; }
+.row .label { font-size: 14px; font-weight: 500; }
+.row .label small { display: block; color: var(--muted); font-size: 12px; font-weight: 400; }
+.plot { position: relative; }
+.bar { position: relative; height: 30px; background: var(--track); border-radius: 10px; }
+.rng { position: absolute; top: 0; bottom: 0; border-radius: 10px; min-width: 8px; }
+.val { position: absolute; top: 50%; transform: translateY(-50%); font-family: var(--font-data); font-size: 12px; white-space: nowrap; color: var(--fg); }
+.r-don { left: 15.9%; width: 10%; background: var(--lavender); }
+.r-sup { left: 25.9%; width: 10.1%; background: var(--lavender); }
+.r-aff { left: 10%; width: 13.3%; background: var(--sky); }
+.r-prem { left: 46%; width: 13.3%; background: var(--peach); }
+.r-spon { left: 0; width: 76.7%; background: repeating-linear-gradient(135deg, var(--butter) 0 8px, transparent 8px 14px); border: 1px solid var(--butter-ink); }
+.r-b2b { left: 85.2%; width: 10%; background: var(--accent); }
+.costline { position: absolute; top: -6px; bottom: -6px; left: 40.6%; width: 0; border-left: 2px dashed var(--missed); pointer-events: none; }
+.plots { position: relative; display: grid; gap: 12px; }
+.axis { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 12px; }
+.ticks { position: relative; height: 34px; font-family: var(--font-data); font-size: 11px; color: var(--muted); }
+.ticks span { position: absolute; top: 0; transform: translateX(-50%); }
+.ticks span:first-child { transform: none; }
+.ticks span:last-child { transform: translateX(-100%); }
+.ticks .cost { top: 16px; color: var(--missed); left: 40.6%; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 13px; color: var(--muted); }
+.legend i { display: inline-block; width: 14px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: middle; }
+.legend .dash { width: 0; height: 14px; border-left: 2px dashed var(--missed); border-radius: 0; }
+
+/* Route cards */
+.routes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.route { background: var(--track); border-radius: 18px; padding: 18px; display: grid; gap: 10px; align-content: start; }
+.route h3 { font-size: 17px; }
+.route p { font-size: 14px; color: var(--muted); }
+.route .amt { font-family: var(--font-data); font-size: 18px; }
+.route .amt small { font-family: var(--font-body); font-size: 12px; color: var(--muted); margin-left: 4px; }
+.pills { display: flex; flex-wrap: wrap; gap: 6px; }
+.pill { font-size: 12px; font-weight: 500; padding: 3px 9px; border-radius: 999px; background: var(--card); }
+.pill.good { color: var(--done); }
+.pill.bad { color: var(--missed); }
+.pill.mid { color: var(--started); }
+.route.star { background: var(--accent); color: var(--accent-ink); grid-column: span 3; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 10px 24px; }
+.route.star p { color: inherit; opacity: 0.9; }
+.route.star .amt small { color: inherit; opacity: 0.85; }
+.route.star .pill { background: var(--accent-ink); color: var(--accent); }
+.route.star .side { display: grid; gap: 10px; align-content: start; }
+
+/* Path + rules */
+.split { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 20px; }
+ol.steps { margin: 0; padding: 0; list-style: none; display: grid; gap: 12px; counter-reset: s; }
+ol.steps li { counter-increment: s; display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 12px; align-items: start; font-size: 14px; }
+ol.steps li::before { content: counter(s); font-family: var(--font-data); width: 34px; height: 34px; border-radius: 50%; background: var(--fg); color: var(--bg); display: grid; place-items: center; }
+ol.steps b { display: block; font-size: 15px; }
+ol.steps span { color: var(--muted); }
+ol.steps li.gate::before { background: var(--accent); color: var(--accent-ink); }
+.rules { display: grid; gap: 12px; }
+.rule { display: grid; grid-template-columns: 10px minmax(0, 1fr); gap: 12px; font-size: 14px; }
+.rule::before { content: ""; border-radius: 5px; background: var(--started); }
+.rule b { display: block; font-size: 15px; }
+.rule span { color: var(--muted); }
+.rule.big::before { background: var(--missed); }
+footer { color: var(--muted); font-size: 13px; text-align: center; padding-top: 8px; }
+
+@media (max-width: 860px) {
+  .routes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .route.star { grid-column: 1 / -1; grid-template-columns: minmax(0, 1fr); }
+  .split { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 600px) {
+  .stats, .routes { grid-template-columns: minmax(0, 1fr); }
+  .row, .axis { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+  .axis > :first-child { display: none; }
+  .panel { padding: 22px; }
+}
+</style>
+
+<main class="wrap">
+
+  <header class="hero">
+    <span class="eyebrow">Startup design · Revenue options · 10 Oct 2026</span>
+    <h1>Yes, but only one route pays real money: <em>organizations that run many rooms.</em></h1>
+    <p class="lede">Charging households or users earns pocket money that covers running costs. Selling a dashboard to coliving operators, student housing companies or kollegium administrations is the only route that can reach tens of thousands of DKK a year.</p>
+    <span class="stage">Stage A, assumption-based. No one outside your home uses Roomies yet.</span>
+    <div class="stats">
+      <div class="stat"><span class="num">≤ 6,000 DKK</span><span>a year from any household route at 500 homes</span></div>
+      <div class="stat hot"><span class="num">36k–72k DKK</span><span>a year from one operator with 300 rooms</span></div>
+      <div class="stat"><span class="num">≈ 1,650 DKK</span><span>a year for Vercel Pro, required once you charge</span></div>
+    </div>
+  </header>
+
+  <section class="panel" aria-labelledby="chart">
+    <span class="eyebrow">Income per year, by route</span>
+    <h2 id="chart">Each step to the right on the axis is 10 times more money</h2>
+    <p class="lede">Base: 500 active homes of 4 people (level 3). Ranges are estimates. The scale is logarithmic, so the operator route is about 10 times the best household route.</p>
+    <div class="chart" role="img" aria-label="Log-scale range chart of yearly income. Donations 300 to 600 DKK. Supporter plan 600 to 1,200. Shopping list links about 200 to 500. Household premium 2,400 to 6,000. Sponsor 0 to 20,000 one-off. Operators 36,000 to 72,000. The cost of a commercial host is about 1,650 DKK a year.">
+      <div class="plots">
+        <div class="row"><div class="label">Donations<small>0.5–1% give 30 DKK</small></div><div class="plot"><div class="bar"><div class="rng r-don"></div><span class="val" style="left:calc(25.9% + 8px)">300–600</span></div><div class="costline"></div></div></div>
+        <div class="row"><div class="label">Supporter plan<small>10 DKK/mo, 1–2% of homes</small></div><div class="plot"><div class="bar"><div class="rng r-sup"></div><span class="val" style="left:calc(36% + 8px)">600–1,200</span></div><div class="costline"></div></div></div>
+        <div class="row"><div class="label">Shopping list links<small>grocery affiliate</small></div><div class="plot"><div class="bar"><div class="rng r-aff"></div><span class="val" style="left:calc(23.3% + 8px)">a few hundred</span></div><div class="costline"></div></div></div>
+        <div class="row"><div class="label">Household premium<small>20 DKK/mo, 2–5% pay</small></div><div class="plot"><div class="bar"><div class="rng r-prem"></div><span class="val" style="left:calc(59.3% + 8px)">2,400–6,000</span></div><div class="costline"></div></div></div>
+        <div class="row"><div class="label">Sponsor<small>one-off, uncertain</small></div><div class="plot"><div class="bar"><div class="rng r-spon"></div><span class="val" style="left:calc(76.7% + 8px)">0–20,000</span></div><div class="costline"></div></div></div>
+        <div class="row"><div class="label">Operators (B2B)<small>1 operator, 300 rooms</small></div><div class="plot"><div class="bar"><div class="rng r-b2b"></div><span class="val" style="right:calc(100% - 85.2% + 8px)">36k–72k</span></div><div class="costline"></div></div></div>
+      </div>
+      <div class="axis" aria-hidden="true">
+        <div></div>
+        <div class="ticks"><span style="left:0">100</span><span style="left:33.33%">1,000</span><span style="left:66.67%">10,000</span><span style="left:100%">100,000 DKK</span><span class="cost">commercial host ≈ 1,650</span></div>
+      </div>
+    </div>
+    <div class="legend"><span><i class="dash"></i>Left of the red line: does not even pay for a commercial host</span><span><i style="background:var(--lavender)"></i>user money</span><span><i style="background:var(--peach)"></i>household paywall</span><span><i style="background:var(--accent)"></i>operator</span></div>
+  </section>
+
+  <section class="panel" aria-labelledby="routes">
+    <span class="eyebrow">The six routes</span>
+    <h2 id="routes">What each route does to growth and to your evenings</h2>
+    <div class="routes">
+      <div class="route">
+        <h3>Donations</h3>
+        <div class="amt">300–600<small>DKK/yr</small></div>
+        <p>MobilePay box or "buy us a coffee".</p>
+        <div class="pills"><span class="pill good">Growth: no harm</span><span class="pill good">Effort: very low</span></div>
+      </div>
+      <div class="route">
+        <h3>Supporter plan</h3>
+        <div class="amt">600–1,200<small>DKK/yr</small></div>
+        <p>Optional extras like themes or history. Core stays free.</p>
+        <div class="pills"><span class="pill good">Growth: no harm</span><span class="pill good">Effort: low</span></div>
+      </div>
+      <div class="route">
+        <h3>Shopping list links</h3>
+        <div class="amt">a few hundred<small>DKK/yr</small></div>
+        <p>"Running low" items link to an online grocery shop.</p>
+        <div class="pills"><span class="pill good">Growth: no harm</span><span class="pill mid">Effort: medium</span></div>
+      </div>
+      <div class="route">
+        <h3>Household premium</h3>
+        <div class="amt">2,400–6,000<small>DKK/yr</small></div>
+        <p>Reminders, editor and kitchen mode behind 20 DKK a month.</p>
+        <div class="pills"><span class="pill bad">Growth: slows word of mouth</span><span class="pill mid">Effort: medium</span></div>
+      </div>
+      <div class="route">
+        <h3>Sponsor</h3>
+        <div class="amt">0–20,000<small>DKK, one-off</small></div>
+        <p>A cleaning brand or housing body pays for a logo or template pack.</p>
+        <div class="pills"><span class="pill mid">Growth: trust risk</span><span class="pill bad">Effort: sales</span></div>
+      </div>
+      <div class="route star">
+        <div class="side">
+          <h3>Operators (B2B): the one route that pays</h3>
+          <div class="amt">36,000–72,000<small>DKK/yr per operator with 300 rooms</small></div>
+          <p>The operator pays 10 to 20 DKK per room per month for one dashboard of all its houses, rules and move-ins. Residents keep using it free, with no accounts.</p>
+        </div>
+        <div class="side">
+          <div class="pills"><span class="pill">Growth: positive, each operator brings many homes</span><span class="pill">Effort: high</span></div>
+          <p>Needs level 4 (kitchen mode), an admin dashboard, invoices and sales. Nobody asked an operator yet.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="split">
+    <div class="panel" aria-labelledby="path">
+      <span class="eyebrow">Recommended path</span>
+      <h2 id="path">Free for homes, test operators before you build</h2>
+      <ol class="steps">
+        <li><div><b>Keep it free for households, forever</b><span>Free use is how it spreads from one flat to the next.</span></div></li>
+        <li><div><b>Add a donation link at level 3</b><span>It covers the domain and Redis. It also shows whether people care.</span></div></li>
+        <li><div><b>Pitch 3 to 5 operators on one page</b><span>Coliving, student housing, kollegium administrations. Before you write any dashboard code.</span></div></li>
+        <li class="gate"><div><b>Gate: one operator says "send us an invoice"</b><span>Polite interest does not count. Also wait until one kitchen used Roomies for a semester.</span></div></li>
+      </ol>
+    </div>
+    <div class="panel" aria-labelledby="rules">
+      <span class="eyebrow">When money comes in</span>
+      <h2 id="rules">What changes</h2>
+      <div class="rules">
+        <div class="rule big"><div><b>The hobby becomes a small business</b><span>Customers, support, invoices. Before you start, decide whether you want that.</span></div></div>
+        <div class="rule"><div><b>New host plan</b><span>Vercel Hobby forbids commercial use. Move to Pro ($20 a month) or to another host first.</span></div></div>
+        <div class="rule"><div><b>Payments and terms</b><span>Stripe or MobilePay Subscriptions, plus terms of service.</span></div></div>
+        <div class="rule"><div><b>Tax</b><span>Hobby income is personal income. Above 50,000 DKK turnover in 12 months, register for moms. This is an assumption, so make sure that it is right with Skattestyrelsen.</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>Full text: <code>docs/roomies-startup/05-financial/revenue-options.md</code> · Conversion and donation rates are general assumptions, not sourced data</footer>
+</main>

@@ -55,8 +55,9 @@ export function MyWeek() {
             <div className="flex size-9 items-center justify-center rounded-full bg-white/70">
               {me.status === 'done' ? <CheckCircle weight="fill" className="text-done text-xl" /> : <span className="text-sm font-medium">{me.percent}%</span>}
             </div>
-            <p className={cn('mt-8 text-sm', c.ink)}>This week you're on</p>
-            <h1 className="text-[28px] font-medium leading-tight">{me.area.name}</h1>
+            <p className={cn('mt-8 text-sm', c.ink)}>{me.allAreas ? "This week it's your turn" : "This week you're on"}</p>
+            <h1 className="text-[28px] font-medium leading-tight">{me.allAreas ? 'All areas' : me.area.name}</h1>
+            {me.allAreas && <p className={cn('mt-0.5 text-sm', c.ink)}>{me.sections.map((x) => x.area.short).join(' · ')}</p>}
             <p className={cn('mt-1 text-sm', c.ink, due.urgent && me.status !== 'done' && 'font-medium')}>
               {me.status === 'done' && me.finishedAt ? `Finished ${formatStamp(me.finishedAt)}` : due.passed ? `Deadline was ${dueDay}` : `${due.label} · until ${dueDay}`}
             </p>
@@ -75,7 +76,9 @@ export function MyWeek() {
           <Doodle name="sparkle" className="absolute -right-3 top-2 h-32 w-40" />
           <p className="mt-10 text-sm text-sky-ink">This week</p>
           <h1 className="text-[28px] font-medium">Free week!</h1>
-          <p className="mt-1 text-sm text-sky-ink">Nothing on your list. Enjoy.</p>
+          <p className="mt-1 text-sm text-sky-ink">
+            {me.cleaner ? `${me.cleaner.name} cleans this week. Nothing on your list.` : 'Nothing on your list. Enjoy.'}
+          </p>
         </section>
       )}
 
@@ -100,7 +103,7 @@ export function MyWeek() {
               </div>
               <div className="mt-auto pt-3">
                 <p className={cn('text-xs', oc.ink)}>{o.person.name}</p>
-                <p className="text-[15px] font-medium leading-tight">{o.area?.short ?? 'Free week'}</p>
+                <p className="text-[15px] font-medium leading-tight">{o.allAreas ? 'All areas' : (o.area?.short ?? 'Free week')}</p>
                 {o.area && <ProgressBar value={o.percent} className="mt-2" barClass={o.status === 'done' ? 'bg-done' : undefined} />}
               </div>
             </button>

@@ -1,0 +1,516 @@
+<title>Roomies Nordic Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700;9..40,800&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: the Roomies pastel bento board. Read top to bottom:
+   pitch, USP, who pays, what to build, Nordic extras, money, launch, risks. */
+:root {
+  --bg: #F4F2EF; --card: #FFFFFF; --fg: #1C1C1C; --fg-2: #57534D; --fg-3: #8A857E;
+  --line: #E8E4DE; --track: #EDEAE5; --accent: #F07A2B; --accent-ink: #B4500F;
+  --pill-bg: #1C1C1C; --pill-fg: #FFFFFF;
+  --butter: #FFE9A3;   --butter-ink: #6B5A1E;
+  --lavender: #E7E6FB; --lavender-ink: #55508A;
+  --peach: #FDE4DA;    --peach-ink: #8A4D35;
+  --mint: #D9F3EE;     --mint-ink: #2F6E62;
+  --cream: #FFF1DC;    --cream-ink: #8A6A35;
+  --sky: #DDEEFF;      --sky-ink: #35628A;
+  --font-display: "DM Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-body: "DM Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-data: "DM Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --r: 24px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #151413; --card: #211F1D; --fg: #F4F2EF; --fg-2: #C9C3BA; --fg-3: #9C968E;
+    --line: #34312D; --track: #2C2A27; --accent: #F28A43; --accent-ink: #F6A66F;
+    --pill-bg: #F4F2EF; --pill-fg: #151413;
+    --butter: #3A3320; --butter-ink: #F2DC8E; --lavender: #2A2940; --lavender-ink: #C9C5F5;
+    --peach: #3D2A22; --peach-ink: #F5BFA8; --mint: #1E3632; --mint-ink: #A6E3D6;
+    --cream: #3A3020; --cream-ink: #F0D3A3; --sky: #1F2E3D; --sky-ink: #A9CDF2;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #151413; --card: #211F1D; --fg: #F4F2EF; --fg-2: #C9C3BA; --fg-3: #9C968E;
+  --line: #34312D; --track: #2C2A27; --accent: #F28A43; --accent-ink: #F6A66F;
+  --pill-bg: #F4F2EF; --pill-fg: #151413;
+  --butter: #3A3320; --butter-ink: #F2DC8E; --lavender: #2A2940; --lavender-ink: #C9C5F5;
+  --peach: #3D2A22; --peach-ink: #F5BFA8; --mint: #1E3632; --mint-ink: #A6E3D6;
+  --cream: #3A3020; --cream-ink: #F0D3A3; --sky: #1F2E3D; --sky-ink: #A9CDF2;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 15px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+.wrap { max-width: 1080px; margin: 0 auto; padding-inline: 16px; padding-block: 28px 48px; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; color: var(--fg); }
+p { margin: 0; }
+h2 { font-size: 21px; font-weight: 800; letter-spacing: -0.01em; line-height: 1.15; }
+h3 { font-size: 15.5px; font-weight: 700; line-height: 1.25; }
+.eyebrow { font-family: var(--font-data); font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--fg-3); }
+.sub { font-size: 14px; color: var(--fg-2); max-width: 62ch; }
+.note { font-size: 12.5px; color: var(--fg-3); }
+.board { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 12px; }
+.tile { background: var(--card); border-radius: var(--r); padding: 22px; min-width: 0; display: flex; flex-direction: column; gap: 14px; }
+.span-12 { grid-column: span 12; } .span-8 { grid-column: span 8; } .span-7 { grid-column: span 7; }
+.span-6 { grid-column: span 6; } .span-5 { grid-column: span 5; } .span-4 { grid-column: span 4; }
+@media (max-width: 860px) { .span-8, .span-7, .span-6, .span-5, .span-4 { grid-column: span 12; } }
+.tinted .eyebrow, .tinted .sub, .tinted .note { color: inherit; }
+.tinted .eyebrow { opacity: .8; }
+.t-butter { background: var(--butter); color: var(--butter-ink); }
+.t-sky { background: var(--sky); color: var(--sky-ink); }
+.t-peach { background: var(--peach); color: var(--peach-ink); }
+.t-mint { background: var(--mint); color: var(--mint-ink); }
+.t-lav { background: var(--lavender); color: var(--lavender-ink); }
+.t-cream { background: var(--cream); color: var(--cream-ink); }
+
+.mast { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 17px; }
+.brand-dot { width: 28px; height: 28px; border-radius: 50%; background: var(--accent); display: grid; place-items: center; color: #fff; font-weight: 800; font-size: 14px; }
+.pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; background: var(--pill-bg); color: var(--pill-fg); font-size: 12.5px; font-weight: 500; }
+
+/* Hero */
+.hero { padding: 28px; }
+.hero-grid { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 24px; align-items: center; }
+@media (max-width: 860px) { .hero-grid { grid-template-columns: minmax(0, 1fr); } }
+.hero h1 { font-size: clamp(30px, 5vw, 52px); line-height: 1.03; font-weight: 800; letter-spacing: -0.025em; max-width: 16ch; }
+.hero .lede { font-size: 17px; max-width: 48ch; margin-top: 14px; }
+.poster {
+  justify-self: center; width: min(250px, 100%); background: var(--card); color: var(--fg);
+  border-radius: 8px; padding: 18px 16px 14px; transform: rotate(-2.5deg); position: relative;
+  box-shadow: 0 12px 28px rgba(60, 45, 10, .14);
+}
+.poster::before { content: ""; position: absolute; top: -9px; left: 50%; width: 18px; height: 18px; margin-left: -9px; border-radius: 50%; background: var(--accent); }
+.poster b { display: block; font-size: 14px; }
+.poster .wk { font-family: var(--font-data); font-size: 11px; color: var(--fg-3); }
+.poster-body { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 12px; margin-top: 10px; align-items: center; }
+.qr { width: 92px; height: 92px; display: grid; grid-template-columns: repeat(9, 1fr); gap: 1px; }
+.qr i { background: var(--fg); border-radius: 1px; }
+.qr i.o { background: transparent; }
+.poster ul { list-style: none; margin: 0; padding: 0; font-family: var(--font-data); font-size: 10.5px; line-height: 1.7; }
+.poster li { display: flex; justify-content: space-between; border-bottom: 1px dashed var(--line); }
+.poster .cta { margin-top: 10px; font-size: 11.5px; font-weight: 700; text-align: center; background: var(--butter); color: var(--butter-ink); border-radius: 999px; padding: 4px; }
+
+/* USP pillars */
+.pillars { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 760px) { .pillars { grid-template-columns: minmax(0, 1fr); } }
+.pillar { border-radius: 20px; padding: 18px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.pillar .word { font-size: 28px; font-weight: 800; letter-spacing: -0.02em; color: var(--fg); }
+.pillar .proof { font-family: var(--font-data); font-size: 12px; padding: 3px 9px; border-radius: 999px; background: var(--card); color: var(--fg); align-self: flex-start; }
+.pillar p { font-size: 13.5px; }
+
+/* Onboarding steps compare */
+.flow { display: grid; gap: 12px; }
+.flow-row { display: grid; grid-template-columns: 9.5rem minmax(0, 1fr); gap: 12px; align-items: center; }
+@media (max-width: 520px) { .flow-row { grid-template-columns: minmax(0, 1fr); gap: 6px; } }
+.flow-label { font-size: 13.5px; font-weight: 700; }
+.flow-label small { display: block; font-weight: 400; font-size: 12px; color: var(--fg-3); }
+.chain { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.step { font-size: 12.5px; padding: 5px 10px; border-radius: 999px; background: var(--track); color: var(--fg-2); }
+.step.us { background: var(--accent); color: #fff; font-weight: 500; }
+.step.done { background: var(--mint); color: var(--mint-ink); font-weight: 500; }
+.step.bad { background: var(--peach); color: var(--peach-ink); font-weight: 500; }
+.arrow { color: var(--fg-3); font-size: 12px; }
+
+/* Who pays ladder */
+.ladder { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; position: relative; }
+@media (max-width: 760px) { .ladder { grid-template-columns: minmax(0, 1fr); gap: 10px; } }
+.rung { padding: 18px; border-radius: 20px; display: flex; flex-direction: column; gap: 8px; min-width: 0; margin: 0 6px; }
+.rung .who { font-size: 12px; font-family: var(--font-data); text-transform: uppercase; letter-spacing: .06em; opacity: .85; }
+.rung h3 { font-size: 19px; font-weight: 800; }
+.rung .price { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; color: var(--fg); font-variant-numeric: tabular-nums; }
+.rung .price small { font-size: 13px; font-weight: 500; letter-spacing: 0; color: inherit; }
+.rung ul { margin: 0; padding-left: 18px; font-size: 13px; display: grid; gap: 3px; }
+.rung .role { margin-top: auto; font-size: 12px; font-weight: 700; background: var(--card); color: var(--fg); border-radius: 999px; padding: 4px 10px; align-self: flex-start; }
+.test { font-family: var(--font-data); font-size: 10.5px; padding: 1px 6px; border-radius: 999px; border: 1px solid currentColor; vertical-align: 2px; margin-left: 4px; font-weight: 500; letter-spacing: 0; }
+
+/* Build order */
+.lanes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 860px) { .lanes { grid-template-columns: minmax(0, 1fr); } }
+.lane { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.lane-h { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.lane-h b { font-size: 14px; }
+.lane-h span { font-family: var(--font-data); font-size: 11px; color: var(--fg-3); }
+.card { border: 1px solid var(--line); border-radius: 16px; padding: 12px; display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 10px; align-items: start; }
+.num { width: 30px; height: 30px; border-radius: 50%; background: var(--pill-bg); color: var(--pill-fg); display: grid; place-items: center; font-weight: 700; font-size: 13px; }
+.card.first .num { background: var(--accent); color: #fff; }
+.card b { display: block; font-size: 14px; }
+.card span { font-size: 12.5px; color: var(--fg-2); }
+.notnow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.x { font-size: 12.5px; padding: 5px 11px; border-radius: 999px; background: var(--track); color: var(--fg-2); text-decoration: line-through; text-decoration-color: var(--fg-3); }
+
+/* Nordic extras */
+.extras { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 960px) { .extras { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 480px) { .extras { grid-template-columns: minmax(0, 1fr); } }
+.extra { border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.extra .term { font-family: var(--font-data); font-size: 11.5px; opacity: .85; }
+.extra h3 { font-size: 16px; }
+.extra p { font-size: 13px; }
+.glyph { width: 34px; height: 34px; border-radius: 50%; background: var(--card); display: grid; place-items: center; font-size: 16px; font-weight: 700; color: var(--fg); }
+
+/* Calculator */
+.calc { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+@media (max-width: 760px) { .calc { grid-template-columns: minmax(0, 1fr); } }
+.ctl { display: grid; gap: 6px; }
+.ctl label { display: flex; justify-content: space-between; font-size: 13.5px; font-weight: 500; gap: 10px; }
+.ctl output { font-family: var(--font-data); font-variant-numeric: tabular-nums; }
+.ctl input[type=range] { width: 100%; accent-color: var(--accent); }
+.ctls { display: grid; gap: 16px; }
+.result { display: grid; gap: 10px; }
+.total { font-size: clamp(36px, 5vw, 52px); font-weight: 800; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; line-height: 1; }
+.total small { font-size: 15px; font-weight: 500; letter-spacing: 0; color: var(--fg-2); }
+.split { display: flex; height: 18px; border-radius: 4px; overflow: hidden; gap: 2px; background: var(--track); }
+.split div { height: 100%; transition: width .3s ease; min-width: 0; }
+.seg-k { background: var(--sky-ink); }
+.seg-b { background: var(--accent); }
+.key { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12.5px; color: var(--fg-2); }
+.key span { display: inline-flex; align-items: center; gap: 6px; }
+.key i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+
+/* Timeline */
+.timeline { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0; position: relative; }
+@media (max-width: 860px) { .timeline { grid-template-columns: minmax(0, 1fr); gap: 10px; } }
+.tl { padding: 0 8px; display: flex; flex-direction: column; gap: 6px; min-width: 0; position: relative; }
+.tl::before { content: ""; height: 4px; border-radius: 2px; background: var(--track); margin-bottom: 8px; }
+.tl.go::before { background: var(--accent); }
+.tl .when { font-family: var(--font-data); font-size: 11.5px; color: var(--fg-3); }
+.tl b { font-size: 14px; }
+.tl span { font-size: 12.5px; color: var(--fg-2); }
+.gate { background: var(--butter); color: var(--butter-ink); border-radius: 14px; padding: 10px; font-size: 12.5px; }
+.gate b { color: var(--fg); }
+.metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 520px) { .metrics { grid-template-columns: minmax(0, 1fr); } }
+.metric { border-radius: 16px; padding: 14px; background: var(--bg); display: grid; gap: 4px; }
+.metric .v { font-size: 30px; font-weight: 800; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.metric p { font-size: 13px; color: var(--fg-2); }
+
+/* Expansion */
+.countries { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 760px) { .countries { grid-template-columns: minmax(0, 1fr); } }
+.country { border-radius: 18px; padding: 16px; border: 1px solid var(--line); display: grid; gap: 6px; min-width: 0; }
+.country.now { border: 2px solid var(--accent); }
+.country .cc { display: flex; justify-content: space-between; align-items: center; }
+.country .cc b { font-size: 17px; }
+.flag { font-family: var(--font-data); font-size: 11px; padding: 2px 8px; border-radius: 999px; background: var(--track); color: var(--fg-2); }
+.country.now .flag { background: var(--accent); color: #fff; }
+.country dl { margin: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 3px 10px; font-size: 13px; }
+.country dt { color: var(--fg-3); }
+.country dd { margin: 0; }
+
+/* Risks */
+.risks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 640px) { .risks { grid-template-columns: minmax(0, 1fr); } }
+.risk { border-radius: 16px; padding: 14px; background: var(--card); display: grid; gap: 4px; }
+.risk b { font-size: 14px; color: var(--fg); }
+.risk span { font-size: 13px; color: var(--fg-2); }
+
+footer { margin-top: 18px; font-size: 12.5px; color: var(--fg-3); max-width: 90ch; display: grid; gap: 6px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+</style>
+
+<div class="wrap">
+  <div class="mast">
+    <div class="brand"><span class="brand-dot" aria-hidden="true">R</span> Roomies</div>
+    <span class="pill">Strategy draft · Copenhagen first · Oct 2026</span>
+  </div>
+
+  <main class="board">
+    <!-- Pitch -->
+    <section class="tile hero t-butter tinted span-12" aria-labelledby="h-hero">
+      <div class="hero-grid">
+        <div>
+          <span class="eyebrow">The position</span>
+          <h1 id="h-hero">The kitchen rota that is faster than the fridge plan.</h1>
+          <p class="lede">Built for Copenhagen kollegier and shared flats. Scan the poster on the fridge, see your area, tick it off. No accounts, Danish and English. Free for flats. Buildings pay.</p>
+        </div>
+        <div class="poster" aria-label="Example fridge poster with a QR code">
+          <b>Køkken 4 · Roomies</b>
+          <span class="wk">Uge 42 · deadline søn 21:00</span>
+          <div class="poster-body">
+            <div class="qr" id="qr" aria-hidden="true"></div>
+            <ul>
+              <li><span>Komfur</span><span>Ida</span></li>
+              <li><span>Køleskab</span><span>Jonas</span></li>
+              <li><span>Gulv</span><span>Mei</span></li>
+              <li><span>Bad</span><span>Ali</span></li>
+            </ul>
+          </div>
+          <div class="cta">Scan · vælg navn · PIN</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- USP -->
+    <section class="tile span-12" aria-labelledby="h-usp">
+      <span class="eyebrow">Unique selling point</span>
+      <h2 id="h-usp">Faster, cheaper and easier, in that order</h2>
+      <div class="pillars">
+        <div class="pillar t-peach tinted">
+          <span class="word">Faster</span>
+          <span class="proof">about 10 sec to join</span>
+          <p>The QR poster turns the fridge plan into the way in. Scan, pick your name, set a PIN. No app store, no email.</p>
+        </div>
+        <div class="pillar t-mint tinted">
+          <span class="word">Cheaper</span>
+          <span class="proof">€0 for flats</span>
+          <p>Flats of up to six people are free forever, with no ads. Sweepy charges about $20 a year to share. Flatastic charges about $35 a year to remove ads.</p>
+        </div>
+        <div class="pillar t-sky tinted">
+          <span class="word">Easier</span>
+          <span class="proof">da + en</span>
+          <p>Danish for the locals, English for the many international students. A gentle tone with no leaderboard, which fits Nordic ideas of fairness.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Join flow -->
+    <section class="tile span-7" aria-labelledby="h-join">
+      <span class="eyebrow">Why "faster" is real</span>
+      <h2 id="h-join">Steps before a new roommate sees their task</h2>
+      <div class="flow">
+        <div class="flow-row">
+          <div class="flow-label">Typical chore app<small>Store install + account</small></div>
+          <div class="chain">
+            <span class="step">Find app</span><span class="arrow">→</span>
+            <span class="step">Install</span><span class="arrow">→</span>
+            <span class="step">Sign up</span><span class="arrow">→</span>
+            <span class="step">Confirm email</span><span class="arrow">→</span>
+            <span class="step">Enter invite code</span><span class="arrow">→</span>
+            <span class="step done">Task</span>
+          </div>
+        </div>
+        <div class="flow-row">
+          <div class="flow-label">Fridge plan<small>Zero steps, no status</small></div>
+          <div class="chain">
+            <span class="step">Walk to fridge</span><span class="arrow">→</span>
+            <span class="step bad">Task, but nobody sees it done</span>
+          </div>
+        </div>
+        <div class="flow-row">
+          <div class="flow-label" style="color:var(--accent-ink)">Roomies + QR<small>Web app, no account</small></div>
+          <div class="chain">
+            <span class="step us">Scan poster</span><span class="arrow">→</span>
+            <span class="step us">Pick name</span><span class="arrow">→</span>
+            <span class="step us">PIN</span><span class="arrow">→</span>
+            <span class="step done">Task + live status</span>
+          </div>
+        </div>
+      </div>
+      <p class="note">The step lists show a typical flow. They are not measured times.</p>
+    </section>
+
+    <section class="tile t-lav tinted span-5" aria-labelledby="h-turn">
+      <span class="eyebrow">The problem it solves</span>
+      <h2 id="h-turn">Kitchens change people every semester</h2>
+      <p class="sub">In a kollegium, someone moves in or out almost every month. Every app that needs accounts and invites loses people at each change. The fridge plan goes out of date. Roomies only needs a new name on the list.</p>
+      <p class="note">This is the core reason a kitchen picks Roomies over Flatastic.</p>
+    </section>
+
+    <!-- Who pays -->
+    <section class="tile span-12" aria-labelledby="h-pay">
+      <span class="eyebrow">How to make money</span>
+      <h2 id="h-pay">Flats spread it, kitchens fund it, buildings pay for it</h2>
+      <div class="ladder">
+        <div class="rung t-mint tinted">
+          <span class="who">Shared flats, 2–6 people</span>
+          <h3>Home</h3>
+          <div class="price">Free <small>forever</small></div>
+          <ul><li>Rota, checklists, reminders</li><li>QR join, Danish + English</li><li>No ads, no data sold</li></ul>
+          <span class="role">Job: word of mouth</span>
+        </div>
+        <div class="rung t-sky tinted">
+          <span class="who">Kollegium kitchens, 7–20 people</span>
+          <h3>Kitchen</h3>
+          <div class="price">199 kr <small>per semester</small><span class="test">to test</span></div>
+          <ul><li>About 10–15 kr per person</li><li>Paid from the køkkenkasse</li><li>Madklub rota, pant, kitchen fund</li></ul>
+          <span class="role">Job: prove kitchens pay</span>
+        </div>
+        <div class="rung t-peach tinted">
+          <span class="who">Co-living operators, kollegium offices</span>
+          <h3>Building</h3>
+          <div class="price">8 kr <small>per room per month</small><span class="test">to test</span></div>
+          <ul><li>All kitchens in one place</li><li>Move-out checklists for deposits</li><li>Overview for the caretaker</li></ul>
+          <span class="role">Job: real revenue</span>
+        </div>
+      </div>
+      <p class="note">Students already pay 42% more rent when they rent privately (BL 2024), so do not charge flats. Billing in kroner can run through Stripe or MobilePay Subscriptions. All prices are starting points to test.</p>
+    </section>
+
+    <!-- Calculator -->
+    <section class="tile span-12" aria-labelledby="h-calc">
+      <span class="eyebrow">Try the numbers</span>
+      <h2 id="h-calc">Yearly revenue, with example inputs</h2>
+      <div class="calc">
+        <div class="ctls">
+          <div class="ctl">
+            <label for="kitchens">Paying kitchens <output id="o-k">40</output></label>
+            <input type="range" id="kitchens" min="0" max="300" step="5" value="40">
+          </div>
+          <div class="ctl">
+            <label for="kprice">Kitchen price per semester <output id="o-kp">199 kr</output></label>
+            <input type="range" id="kprice" min="49" max="399" step="10" value="199">
+          </div>
+          <div class="ctl">
+            <label for="rooms">Rooms on Building plans <output id="o-r">500</output></label>
+            <input type="range" id="rooms" min="0" max="5000" step="50" value="500">
+          </div>
+          <div class="ctl">
+            <label for="rprice">Price per room per month <output id="o-rp">8 kr</output></label>
+            <input type="range" id="rprice" min="2" max="25" step="1" value="8">
+          </div>
+        </div>
+        <div class="result" aria-live="polite">
+          <div class="total"><span id="total">63,920</span> <small>kr per year</small></div>
+          <div class="split" role="img" aria-label="Revenue split between kitchens and buildings"><div class="seg-k" id="seg-k" style="width:25%"></div><div class="seg-b" id="seg-b" style="width:75%"></div></div>
+          <div class="key">
+            <span><i class="seg-k"></i>Kitchens <b id="v-k">15,920 kr</b></span>
+            <span><i class="seg-b"></i>Buildings <b id="v-b">48,000 kr</b></span>
+          </div>
+          <p class="sub">Move the sliders. Kitchens alone stay pocket money. One or two building deals change the picture. Running cost stays close to €0 on the current free-tier setup until usage grows.</p>
+          <p class="note">Example inputs, not a forecast.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Build order -->
+    <section class="tile span-12" aria-labelledby="h-build">
+      <span class="eyebrow">What to build</span>
+      <h2 id="h-build">Build in this order</h2>
+      <div class="lanes">
+        <div class="lane">
+          <div class="lane-h"><b>Now</b><span>before the pilot</span></div>
+          <div class="card first"><span class="num">1</span><div><b>Reminders</b><span>Web push on Saturday morning and Sunday afternoon. Nobody opens an app without a nudge.</span></div></div>
+          <div class="card"><span class="num">2</span><div><b>Danish + English</b><span>Every screen, checklist template and reminder in both languages.</span></div></div>
+          <div class="card"><span class="num">3</span><div><b>Self-serve setup</b><span>Create a kitchen, edit people and swaps in the app, PIN check on the server. Replaces config.json.</span></div></div>
+        </div>
+        <div class="lane">
+          <div class="lane-h"><b>Next</b><span>during the pilot</span></div>
+          <div class="card"><span class="num">4</span><div><b>QR fridge poster</b><span>A printable page with this week's rota and a join code.</span></div></div>
+          <div class="card"><span class="num">5</span><div><b>Nordic extras</b><span>Pant, madklub, køkkenkasse, bin guide. See below.</span></div></div>
+        </div>
+        <div class="lane">
+          <div class="lane-h"><b>Later</b><span>after Denmark works</span></div>
+          <div class="card"><span class="num">6</span><div><b>Swedish + Norwegian</b><span>Cheap to add, because the languages are close.</span></div></div>
+          <div class="card"><span class="num">7</span><div><b>Building dashboard</b><span>All kitchens, move-out checklists, invoices.</span></div></div>
+        </div>
+      </div>
+      <div class="notnow" aria-label="Do not build yet">
+        <span class="note">Do not build yet:</span>
+        <span class="x">Expense splitting</span>
+        <span class="x">Native apps</span>
+        <span class="x">Leaderboards</span>
+        <span class="x">Ads</span>
+      </div>
+    </section>
+
+    <!-- Nordic extras -->
+    <section class="tile span-12" aria-labelledby="h-nordic">
+      <span class="eyebrow">Things only a Nordic app would do</span>
+      <h2 id="h-nordic">Local features the global apps will not copy</h2>
+      <div class="extras">
+        <div class="extra t-mint tinted"><span class="glyph" aria-hidden="true">↺</span><span class="term">pant</span><h3>Shared pant bag</h3><p>Who returns the bottles this week, and how much deposit goes to the kitchen fund.</p></div>
+        <div class="extra t-butter tinted"><span class="glyph" aria-hidden="true">⟳</span><span class="term">madklub</span><h3>Cooking rota</h3><p>The same rotation engine, for whose turn it is to cook the shared dinner.</p></div>
+        <div class="extra t-sky tinted"><span class="glyph" aria-hidden="true">kr</span><span class="term">køkkenkasse</span><h3>Kitchen fund</h3><p>Pay-in links for MobilePay, Vipps or Swish. Roomies tracks, the bank app pays.</p></div>
+        <div class="extra t-lav tinted"><span class="glyph" aria-hidden="true">⌂</span><span class="term">affald</span><h3>Bin guide by city</h3><p>Sorting rules and pickup days, starting with Copenhagen.</p></div>
+        <div class="extra t-peach tinted"><span class="glyph" aria-hidden="true">✓</span><span class="term">fraflytning</span><h3>Move-out checklist</h3><p>A clean handover when a room changes hands. Helps with deposit disputes.</p></div>
+      </div>
+    </section>
+
+    <!-- Launch -->
+    <section class="tile span-8" aria-labelledby="h-launch">
+      <span class="eyebrow">Go to market</span>
+      <h2 id="h-launch">Copenhagen pilot, then one building deal</h2>
+      <div class="timeline">
+        <div class="tl go"><span class="when">Oct–Dec 2026</span><b>Build steps 1–3</b><span>Reminders, Danish, self-serve setup.</span></div>
+        <div class="tl go"><span class="when">Jan 2027</span><b>Recruit 5 kitchens</b><span>Kitchen representatives and kollegium Facebook groups.</span></div>
+        <div class="tl"><span class="when">Feb–Jun 2027</span><b>Spring pilot</b><span>Free for the pilot kitchens. Add the poster and extras.</span></div>
+        <div class="tl"><span class="when">Jun 2027</span><div class="gate"><b>Decision gate.</b> Do kitchens keep using it after one semester?</div></div>
+        <div class="tl"><span class="when">Aug–Sep 2027</span><b>First paid deals</b><span>Kitchen plan for the new semester. Pitch one operator with pilot data.</span></div>
+      </div>
+    </section>
+
+    <section class="tile span-4" aria-labelledby="h-metrics">
+      <span class="eyebrow">Measure two things</span>
+      <h2 id="h-metrics">Pilot targets</h2>
+      <div class="metrics">
+        <div class="metric"><span class="v">60%</span><p>of members open Roomies each week</p></div>
+        <div class="metric"><span class="v">80%</span><p>of areas done before the deadline</p></div>
+      </div>
+      <p class="note">Suggested targets, not benchmarks. If the pilot misses them, Roomies stays a great app for your own home.</p>
+    </section>
+
+    <!-- Expansion -->
+    <section class="tile span-12" aria-labelledby="h-nordics">
+      <span class="eyebrow">The rest of Scandinavia</span>
+      <h2 id="h-nordics">Same model, three countries</h2>
+      <div class="countries">
+        <div class="country now">
+          <div class="cc"><b>Denmark</b><span class="flag">first</span></div>
+          <dl><dt>Where</dt><dd>Copenhagen, then Aarhus, Odense, Aalborg</dd><dt>Format</dt><dd>Kollegium kitchens, shared flats</dd><dt>Pay</dt><dd>MobilePay</dd><dt>Text</dt><dd>Danish + English</dd></dl>
+        </div>
+        <div class="country">
+          <div class="cc"><b>Sweden</b><span class="flag">after DK</span></div>
+          <dl><dt>Where</dt><dd>Stockholm, Lund, Uppsala, Gothenburg</dd><dt>Format</dt><dd>Student corridors with a shared kitchen</dd><dt>Pay</dt><dd>Swish</dd><dt>Text</dt><dd>Swedish + English</dd></dl>
+        </div>
+        <div class="country">
+          <div class="cc"><b>Norway</b><span class="flag">after DK</span></div>
+          <dl><dt>Where</dt><dd>Oslo, Bergen, Trondheim</dd><dt>Format</dt><dd>Kollektiv flatshares, student housing</dd><dt>Pay</dt><dd>Vipps</dd><dt>Text</dt><dd>Norwegian + English</dd></dl>
+        </div>
+      </div>
+    </section>
+
+    <!-- Risks -->
+    <section class="tile t-cream tinted span-12" aria-labelledby="h-risks">
+      <span class="eyebrow">What can go wrong</span>
+      <h2 id="h-risks">Risks to plan for</h2>
+      <div class="risks">
+        <div class="risk"><b>iPhone push needs home-screen install</b><span>Show install help in the join flow. If too many people skip it, wrap the web app as a store app later.</span></div>
+        <div class="risk"><b>The champion moves out</b><span>Kitchens lose the person who set it up. Let any member edit people, and keep setup under two minutes.</span></div>
+        <div class="risk"><b>Building sales are slow</b><span>Operators decide slowly. Start the first conversation during the pilot, not after.</span></div>
+        <div class="risk"><b>Students will not pay</b><span>That is why flats stay free and kitchens pay from a shared fund, not from one person.</span></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Strategy draft, 10 Oct 2026. Builds on the competitor research in competitors.md and the competitor map. Prices, targets and revenue inputs are suggestions to test, not researched numbers. Competitor prices are indicative, from app stores and third-party sites.</p>
+  </footer>
+</div>
+
+<script>
+(function () {
+  // Decorative QR-like pattern for the poster (not a real code).
+  var qr = document.getElementById('qr');
+  var p = "111101111100101001101110101100101100000001001101011101111111011011001110110101111";
+  for (var i = 0; i < 81; i++) {
+    var c = document.createElement('i');
+    var r = Math.floor(i / 9), k = i % 9;
+    var finder = (r < 3 && k < 3) || (r < 3 && k > 5) || (r > 5 && k < 3);
+    if (!finder && p[i] !== '1') c.className = 'o';
+    qr.appendChild(c);
+  }
+
+  var fmt = new Intl.NumberFormat('en-US');
+  var ids = ['kitchens', 'kprice', 'rooms', 'rprice'];
+  function val(id) { return Number(document.getElementById(id).value); }
+  function update() {
+    var k = val('kitchens') * val('kprice') * 2;
+    var b = val('rooms') * val('rprice') * 12;
+    var t = k + b;
+    document.getElementById('o-k').textContent = val('kitchens');
+    document.getElementById('o-kp').textContent = val('kprice') + ' kr';
+    document.getElementById('o-r').textContent = fmt.format(val('rooms'));
+    document.getElementById('o-rp').textContent = val('rprice') + ' kr';
+    document.getElementById('total').textContent = fmt.format(t);
+    document.getElementById('v-k').textContent = fmt.format(k) + ' kr';
+    document.getElementById('v-b').textContent = fmt.format(b) + ' kr';
+    var kp = t ? (k / t) * 100 : 50;
+    document.getElementById('seg-k').style.width = kp + '%';
+    document.getElementById('seg-b').style.width = (100 - kp) + '%';
+  }
+  ids.forEach(function (id) { document.getElementById(id).addEventListener('input', update); });
+  update();
+})();
+</script>

@@ -32,9 +32,9 @@ function WeekRow({ week, current }: { week: string; current: string }) {
               key={s.person.id}
               onClick={() => navigate(`/p/${s.person.id}/${week}`)}
               className={cn('flex min-h-14 flex-col justify-between rounded-md p-2 text-left transition active:scale-95', c.bg, !isNow && !isPast && 'opacity-80')}
-              aria-label={`${s.person.name}: ${s.area?.name ?? 'free'}`}
+              aria-label={`${s.person.name}: ${s.allAreas ? 'all areas' : (s.area?.name ?? 'free')}`}
             >
-              <span className="text-[13px] font-medium leading-tight">{s.area?.short ?? 'Free'}</span>
+              <span className="text-[13px] font-medium leading-tight">{s.allAreas ? 'All' : (s.area?.short ?? 'Free')}</span>
               {showStatus && s.area ? <StatusDot status={s.status} className="mt-1" /> : <span className="h-2.5" />}
             </button>
           )

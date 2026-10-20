@@ -1,0 +1,447 @@
+<title>Roomies Home Page Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700;9..40,800&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: Roomies' own pastel bento. Visitors first, then a level timeline, a scroll-order wireframe of the home page, a keep / fold / skip board, URL options, and one open question. */
+:root {
+  --bg: #F4F2EF; --card: #FFFFFF; --fg: #1C1C1C; --muted: #8A857E; --line: #E8E4DE; --track: #EDEAE5;
+  --accent: #F07A2B; --accent-ink: #FFFFFF; --missed: #E5484D; --done: #2E9E6B; --started: #E9A23B;
+  --peach: #FDE4DA; --peach-ink: #8A4D35; --mint: #D9F3EE; --mint-ink: #2F6E62;
+  --lavender: #E7E6FB; --lavender-ink: #55508A; --butter: #FFE9A3; --butter-ink: #6B5A1E;
+  --sky: #DDEEFF; --sky-ink: #35628A;
+  --font-body: "DM Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-data: "DM Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --radius: 24px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #161513; --card: #211F1C; --fg: #F2EFEA; --muted: #A39E96; --line: #33302B; --track: #2C2925;
+    --accent: #F28A45; --accent-ink: #1C1C1C; --missed: #F0716F; --done: #5CC495; --started: #F0B65A;
+    --peach: #3A2A23; --peach-ink: #F3BFA8; --mint: #1E3532; --mint-ink: #9FDCCF;
+    --lavender: #2A2943; --lavender-ink: #C4C0F3; --butter: #3A3220; --butter-ink: #EBD58A;
+    --sky: #1F2D3B; --sky-ink: #A9CBEE;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #161513; --card: #211F1C; --fg: #F2EFEA; --muted: #A39E96; --line: #33302B; --track: #2C2925;
+  --accent: #F28A45; --accent-ink: #1C1C1C; --missed: #F0716F; --done: #5CC495; --started: #F0B65A;
+  --peach: #3A2A23; --peach-ink: #F3BFA8; --mint: #1E3532; --mint-ink: #9FDCCF;
+  --lavender: #2A2943; --lavender-ink: #C4C0F3; --butter: #3A3220; --butter-ink: #EBD58A;
+  --sky: #1F2D3B; --sky-ink: #A9CBEE;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 16px; line-height: 1.55; padding-inline: 16px; padding-block: 32px 56px; margin: 0; }
+.wrap { max-width: 1000px; margin-inline: auto; display: grid; gap: 20px; }
+h1, h2, h3 { margin: 0; text-wrap: balance; letter-spacing: -0.02em; }
+p { margin: 0; }
+ul, ol { margin: 0; padding: 0; list-style: none; }
+code { font-family: var(--font-data); font-size: 0.9em; }
+.eyebrow { font-family: var(--font-data); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.panel { background: var(--card); border-radius: var(--radius); padding: 28px; display: grid; gap: 18px; min-width: 0; }
+.panel > h2 { font-size: clamp(21px, 3vw, 26px); }
+.lede { color: var(--muted); max-width: 66ch; }
+
+/* Hero */
+.hero { display: grid; gap: 14px; padding-block: 8px 12px; }
+.hero h1 { font-size: clamp(30px, 5vw, 46px); font-weight: 800; line-height: 1.08; max-width: 20ch; }
+.hero h1 em { font-style: normal; color: var(--accent); }
+.path { justify-self: start; display: inline-flex; gap: 8px; align-items: center; font-size: 13px; background: var(--card); border-radius: 999px; padding: 6px 14px 6px 6px; }
+.path b { background: var(--lavender); color: var(--lavender-ink); border-radius: 999px; padding: 3px 10px; font-weight: 700; font-size: 12px; }
+
+/* Understanding */
+.understand { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.u { border-radius: 18px; padding: 18px 20px; display: grid; gap: 10px; align-content: start; }
+.u.said { background: var(--mint); color: var(--mint-ink); }
+.u.assumed { background: var(--butter); color: var(--butter-ink); }
+.u h3 { font-size: 15px; color: var(--fg); }
+.u li { font-size: 14px; padding-left: 18px; position: relative; }
+.u li::before { content: "•"; position: absolute; left: 4px; }
+
+/* Big idea */
+.big { background: var(--accent); color: var(--accent-ink); border-radius: var(--radius); padding: 26px 28px; display: grid; gap: 10px; }
+.big h2 { font-size: clamp(22px, 3.4vw, 30px); line-height: 1.15; }
+.big p { max-width: 70ch; opacity: 0.95; }
+
+/* Visitors */
+.visitors { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.v { border-radius: 18px; padding: 18px; display: grid; gap: 10px; align-content: start; }
+.v:nth-child(1) { background: var(--track); }
+.v:nth-child(2) { background: var(--peach); color: var(--peach-ink); }
+.v:nth-child(3) { background: var(--lavender); color: var(--lavender-ink); }
+.v:nth-child(4) { background: var(--sky); color: var(--sky-ink); }
+.v h3 { font-size: 16px; color: var(--fg); }
+.v .q { font-size: 15px; font-weight: 700; color: var(--fg); line-height: 1.3; }
+.v p { font-size: 13px; }
+.v .go { font-family: var(--font-data); font-size: 12px; border-top: 1px solid currentColor; padding-top: 8px; }
+.tag { justify-self: start; font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 999px; background: var(--card); color: var(--fg); }
+.tag.no { background: var(--fg); color: var(--bg); }
+
+/* Timeline */
+.timeline { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; position: relative; }
+.step { border-radius: 18px; background: var(--track); padding: 16px; display: grid; gap: 8px; align-content: start; }
+.step.now { background: var(--accent); color: var(--accent-ink); }
+.step .lv { font-family: var(--font-data); font-size: 12px; letter-spacing: 0.06em; }
+.step h3 { font-size: 16px; }
+.step li { font-size: 13px; padding-left: 16px; position: relative; }
+.step li::before { content: "+"; position: absolute; left: 0; font-family: var(--font-data); }
+.step .pages { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font-family: var(--font-data); font-size: 11px; padding: 3px 8px; border-radius: 8px; background: var(--card); color: var(--fg); }
+.step.now .chip { background: var(--accent-ink); color: var(--accent); }
+
+/* Anatomy */
+.anatomy { display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); gap: 28px; align-items: start; }
+.device { border: 2px solid var(--fg); border-radius: 30px; padding: 14px 12px 18px; display: grid; gap: 8px; background: var(--bg); position: sticky; top: calc(env(safe-area-inset-top, 0px) + 16px); }
+.device .bar { display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-family: var(--font-data); color: var(--muted); padding: 0 6px 4px; }
+.blk { border-radius: 14px; padding: 10px 12px; display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 8px; align-items: center; font-size: 12px; }
+.blk .n { font-family: var(--font-data); font-size: 11px; width: 22px; height: 22px; border-radius: 50%; background: var(--fg); color: var(--bg); display: grid; place-items: center; }
+.blk b { font-size: 13px; display: block; line-height: 1.25; }
+.blk span { color: inherit; opacity: 0.8; }
+.b1 { background: var(--card); min-height: 92px; }
+.b1 .cta { display: inline-block; margin-top: 6px; margin-right: 4px; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 999px; background: var(--accent); color: var(--accent-ink); }
+.b1 .cta.ghost { background: transparent; border: 1.5px solid var(--fg); color: var(--fg); }
+.b2 { background: var(--butter); color: var(--butter-ink); min-height: 110px; }
+.b3 { background: var(--mint); color: var(--mint-ink); }
+.b4 { background: var(--card); }
+.b5 { background: var(--peach); color: var(--peach-ink); }
+.b6 { background: var(--lavender); color: var(--lavender-ink); }
+.b7 { background: var(--sky); color: var(--sky-ink); }
+.b8 { background: var(--card); }
+.b9 { background: var(--fg); color: var(--bg); }
+.b9 .n { background: var(--bg); color: var(--fg); }
+.blk b { color: inherit; }
+.b1 b, .b4 b, .b8 b { color: var(--fg); }
+
+.notes { display: grid; gap: 14px; }
+.note { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 12px; font-size: 14px; }
+.note .n { font-family: var(--font-data); font-size: 12px; width: 30px; height: 30px; border-radius: 50%; background: var(--track); display: grid; place-items: center; }
+.note b { display: block; font-size: 15px; }
+.note span { color: var(--muted); }
+.note q { display: block; font-weight: 700; color: var(--fg); quotes: none; margin-block: 2px; }
+.note .src { display: inline-block; font-family: var(--font-data); font-size: 11px; color: var(--muted); margin-top: 4px; }
+.note.star .n { background: var(--accent); color: var(--accent-ink); }
+
+/* Keep / fold / skip */
+.board { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.colm { display: grid; gap: 10px; align-content: start; }
+.colm .head { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 17px; }
+.colm .head i { font-style: normal; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font-size: 14px; }
+.keep .head i { background: var(--done); color: #FFFFFF; }
+.fold .head i { background: var(--started); color: #1C1C1C; }
+.skipc .head i { background: var(--missed); color: #FFFFFF; }
+.colm .sub { font-size: 13px; color: var(--muted); }
+.card { border-radius: 14px; padding: 12px 14px; background: var(--track); display: grid; gap: 2px; }
+.card b { font-size: 14px; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+.card b code { font-weight: 400; color: var(--muted); font-size: 11px; }
+.card span { font-size: 12px; color: var(--muted); }
+.keep .card { background: var(--mint); }
+.keep .card span { color: var(--mint-ink); }
+.fold .card { background: var(--butter); }
+.fold .card span { color: var(--butter-ink); }
+.skipc .card b { text-decoration: line-through; text-decoration-color: var(--missed); text-decoration-thickness: 2px; }
+
+/* Don'ts strip */
+.donts { display: flex; flex-wrap: wrap; gap: 8px; }
+.dont { font-size: 13px; padding: 7px 12px; border-radius: 999px; background: var(--track); }
+.dont b { color: var(--missed); margin-right: 4px; }
+
+/* URL options */
+.opts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.opt { border-radius: 18px; border: 2px solid var(--line); padding: 18px; display: grid; gap: 10px; align-content: start; }
+.opt.rec { border-color: var(--accent); }
+.opt h3 { font-size: 16px; }
+.opt .urls { display: grid; gap: 4px; }
+.opt .urls code { background: var(--track); border-radius: 8px; padding: 4px 8px; font-size: 12px; overflow-wrap: anywhere; }
+.opt li { font-size: 13px; padding-left: 18px; position: relative; }
+.opt li.p::before { content: "+"; position: absolute; left: 0; color: var(--done); font-weight: 700; }
+.opt li.m::before { content: "–"; position: absolute; left: 0; color: var(--missed); font-weight: 700; }
+.badge { justify-self: start; font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 999px; background: var(--accent); color: var(--accent-ink); }
+.warn { background: var(--butter); color: var(--butter-ink); border-radius: 18px; padding: 16px 18px; font-size: 14px; display: grid; gap: 6px; }
+.warn b { color: var(--fg); }
+
+/* Question */
+.ask { border: 2px dashed var(--accent); border-radius: var(--radius); padding: 26px 28px; display: grid; gap: 14px; }
+.ask h2 { font-size: clamp(21px, 3vw, 26px); }
+.answers { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.ans { background: var(--card); border-radius: 16px; padding: 14px 16px; display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 10px; font-size: 14px; }
+.ans .l { font-family: var(--font-data); width: 30px; height: 30px; border-radius: 50%; background: var(--track); display: grid; place-items: center; font-size: 13px; }
+.ans.rec .l { background: var(--accent); color: var(--accent-ink); }
+.ans b { display: block; font-size: 15px; }
+.ans span { color: var(--muted); }
+footer { color: var(--muted); font-size: 13px; text-align: center; padding-top: 8px; }
+
+@media (max-width: 880px) {
+  .visitors, .timeline { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .anatomy { grid-template-columns: minmax(0, 1fr); }
+  .device { position: static; max-width: 360px; }
+  .board, .opts { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 600px) {
+  .understand, .visitors, .timeline, .answers { grid-template-columns: minmax(0, 1fr); }
+  .panel, .big, .ask { padding: 22px; }
+}
+</style>
+
+<main class="wrap">
+
+  <header class="hero">
+    <span class="eyebrow">Brainstorm · Home page · 10 Oct 2026</span>
+    <h1>A home page for Roomies: <em>one page,</em> for people who are not roomies yet.</h1>
+    <p class="lede">Recommendations from the project docs: the hobby direction, competitor research, analysis, revenue options and the current app code. Nothing is built yet. This page is for you to correct before we design anything.</p>
+    <span class="path"><b>Architectural</b> A home page is a new part of the project, so the next steps are questions, a design, then a written spec.</span>
+  </header>
+
+  <section class="panel" aria-labelledby="understood">
+    <span class="eyebrow">What I understood</span>
+    <h2 id="understood">Correct this first</h2>
+    <div class="understand">
+      <div class="u said">
+        <h3>What you said</h3>
+        <ul>
+          <li>Roomies possibly needs a home page for the tool.</li>
+          <li>You want ideas for its elements, and which pages it has (about, contact and others).</li>
+          <li>You also want to know what it must not have.</li>
+          <li>Recommend from the docs first. Build nothing yet.</li>
+        </ul>
+      </div>
+      <div class="u assumed">
+        <h3>What I assumed</h3>
+        <ul>
+          <li>The direction is still the hobby path: free for homes, no accounts, Copenhagen first.</li>
+          <li>The home page is for visitors outside your house. Your three roomies go straight to the app.</li>
+          <li>It uses the same look as the app: pastel tiles, doodles, avatars, DM Sans.</li>
+          <li>The first public link happens at the first Vercel deploy.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="big" aria-labelledby="idea">
+    <span class="eyebrow" style="color: inherit; opacity: 0.85;">The main recommendation</span>
+    <h2 id="idea">Make the home page a single scroll that shows the app, not a website with many pages.</h2>
+    <p>Your real competitor is the paper plan on the fridge. Nobody reads a website before they use a fridge plan. So the page has one job: make a visitor try the demo or ask for Roomies for their home in under a minute. About and Contact are a section and a footer line, not pages.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="who">
+    <span class="eyebrow">Who arrives at the home page</span>
+    <h2 id="who">Four visitors, four questions</h2>
+    <div class="visitors">
+      <div class="v">
+        <span class="tag no">Never sees it</span>
+        <h3>A roomie</h3>
+        <p class="q">"Whose turn is it?"</p>
+        <p>Opens the installed app every weekend. A home page in the way costs a tap, and the docs set a limit of 2 taps to the checklist.</p>
+        <p class="go">Goes to: the app, at once</p>
+      </div>
+      <div class="v">
+        <span class="tag">Level 2 to 3</span>
+        <h3>A friend's flatshare</h3>
+        <p class="q">"Is this easier than our fridge plan?"</p>
+        <p>Heard about it from you, or scanned the QR code on a fridge poster. Has never installed a web app.</p>
+        <p class="go">Goes to: try the demo, then get it</p>
+      </div>
+      <div class="v">
+        <span class="tag">Level 4</span>
+        <h3>A kitchen rep</h3>
+        <p class="q">"Does it work for 12 rooms that change every semester?"</p>
+        <p>Runs the weekly kitchen duty in a kollegium. The docs call this the best fit.</p>
+        <p class="go">Goes to: the kitchen section</p>
+      </div>
+      <div class="v">
+        <span class="tag">Optional path</span>
+        <h3>A developer</h3>
+        <p class="q">"Can I run my own copy?"</p>
+        <p>Only matters if you choose the open-source template or the case study path from the analysis.</p>
+        <p class="go">Goes to: GitHub, case study</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="when">
+    <span class="eyebrow">When each part is needed</span>
+    <h2 id="when">Grow the site with the hobby levels</h2>
+    <p class="lede">The levels come from the hobby direction doc. Each step adds only what the new visitors need.</p>
+    <div class="timeline">
+      <div class="step now">
+        <span class="lv">LEVEL 1 · NOW</span>
+        <h3>Your home</h3>
+        <ul>
+          <li>No marketing page yet</li>
+          <li>A short welcome card for strangers who find the URL: "This is a private house app"</li>
+          <li>Decide the URL plan before the first deploy</li>
+        </ul>
+        <div class="pages"><span class="chip">/ welcome</span></div>
+      </div>
+      <div class="step">
+        <span class="lv">LEVEL 2</span>
+        <h3>Friends' homes</h3>
+        <ul>
+          <li>The one-page home</li>
+          <li>Live demo with fake names</li>
+          <li>Privacy page (names and tick times are personal data)</li>
+          <li>Install help for iPhone and Android</li>
+          <li>Button: "Want it for your home?" to email you</li>
+        </ul>
+        <div class="pages"><span class="chip">/</span><span class="chip">/privacy</span><span class="chip">/install</span></div>
+      </div>
+      <div class="step">
+        <span class="lv">LEVEL 3</span>
+        <h3>Free hosted service</h3>
+        <ul>
+          <li>"Start a home" button replaces the email</li>
+          <li>Danish version</li>
+          <li>Fridge poster with QR code</li>
+          <li>Small donation link in the footer</li>
+          <li>Short terms (abuse rule, delete a home)</li>
+        </ul>
+        <div class="pages"><span class="chip">/da</span><span class="chip">/new</span><span class="chip">/terms</span></div>
+      </div>
+      <div class="step">
+        <span class="lv">LEVEL 4</span>
+        <h3>Kollegium kitchens</h3>
+        <ul>
+          <li>Danish page for kitchen reps</li>
+          <li>One-page guide to take to the kitchen meeting</li>
+          <li>Comparison page only if people search for it</li>
+        </ul>
+        <div class="pages"><span class="chip">/da/kollegium</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="anatomy">
+    <span class="eyebrow">Home page anatomy · in scroll order</span>
+    <h2 id="anatomy">Nine blocks, top to bottom</h2>
+    <div class="anatomy">
+      <div class="device" aria-hidden="true">
+        <div class="bar"><span>roomies</span><span>EN · DA</span></div>
+        <div class="blk b1"><span class="n">1</span><div><b>Your fridge cleaning plan, on everyone's phone.</b><span>No sign-up.</span><br><span class="cta">Try the demo</span><span class="cta ghost">Get it for your home</span></div></div>
+        <div class="blk b2"><span class="n">2</span><div><b>Live demo in a phone frame</b><span>Tick an item, see confetti</span></div></div>
+        <div class="blk b3"><span class="n">3</span><div><b>How it works in 3 steps</b><span>Name + PIN · tick · everyone sees</span></div></div>
+        <div class="blk b4"><span class="n">4</span><div><b>Fridge plan vs Roomies</b><span>What paper cannot do</span></div></div>
+        <div class="blk b5"><span class="n">5</span><div><b>Three promises</b><span>No accounts · offline · free, no ads</span></div></div>
+        <div class="blk b6"><span class="n">6</span><div><b>For kollegium kitchens</b><span>Rotation, move-in, move-out</span></div></div>
+        <div class="blk b7"><span class="n">7</span><div><b>Add to home screen</b><span>iPhone · Android</span></div></div>
+        <div class="blk b8"><span class="n">8</span><div><b>Questions</b><span>5 to 6 short answers</span></div></div>
+        <div class="blk b9"><span class="n">9</span><div><b>Made by a roomie in Copenhagen</b><span>About · privacy · email · GitHub</span></div></div>
+      </div>
+      <ol class="notes">
+        <li class="note"><span class="n">1</span><div><b>Hero: the position, two buttons</b><span>Use the line you already wrote. Do not call it a chore app. Show one phone screenshot with the pastel tiles.</span><q>"Your fridge cleaning plan, on everyone's phone. No sign-up."</q><span class="src">hobby-direction.md · Positioning</span></div></li>
+        <li class="note star"><span class="n">2</span><div><b>Live demo: your best asset</b><span>You already have <code>yarn build:demo</code>, a full app in one file with a fake in-browser API. Put it in a phone frame with fake names. Visitors try Roomies in 10 seconds, with no account. No competitor can do this.</span><span class="src">README.md · Shareable demo</span></div></li>
+        <li class="note"><span class="n">3</span><div><b>How it works</b><span>Three steps that match the real screens: pick your name and PIN, see your area and tick the list, everyone sees who is done. Use the area doodles as icons.</span><span class="src">overview.md · The idea</span></div></li>
+        <li class="note"><span class="n">4</span><div><b>Compare with the fridge plan, not with Flatastic</b><span>Two columns. The fridge plan does not show what is done, goes out of date when people move, and does not remind anyone. Roomies does all three.</span><span class="src">competitors.md · Habits</span></div></li>
+        <li class="note"><span class="n">5</span><div><b>Three promises</b><span>No accounts, works offline, free with no ads and no data sold. These are the unique attributes in your positioning. Say "free" once here, not on a pricing page.</span><span class="src">hobby-direction.md · Unique attributes</span></div></li>
+        <li class="note"><span class="n">6</span><div><b>Kitchen section</b><span>Short, and in Danish when the Danish version exists. More people than areas already works in the rotation code.</span><span class="src">competitors.md · What this means</span></div></li>
+        <li class="note star"><span class="n">7</span><div><b>Install help</b><span>Many people do not know how to add a web app to the home screen, and on iPhone reminders only work after that. Two small step-by-step cards with screenshots.</span><span class="src">competitors.md · Where Roomies is weaker · analysis.md · Reminders</span></div></li>
+        <li class="note"><span class="n">8</span><div><b>Questions</b><span>Is it free forever? What data do you keep? What if someone moves out? Can we swap a week? Does it work in Danish? Answer each in one or two sentences.</span></div></li>
+        <li class="note"><span class="n">9</span><div><b>Footer with the about story</b><span>Two sentences: who made it and why ("four of us share a flat in Copenhagen"). Then links to privacy and GitHub, and your email as plain text. Add the donation link at level 3.</span><span class="src">revenue-options.md · Recommendation</span></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="pages">
+    <span class="eyebrow">Which pages</span>
+    <h2 id="pages">Keep, fold into the home page, or skip</h2>
+    <div class="board">
+      <div class="colm keep">
+        <div class="head"><i>✓</i>Own page</div>
+        <p class="sub">A separate URL, because people link to it or need it alone.</p>
+        <div class="card"><b>Home <code>/</code></b><span>The single scroll above</span></div>
+        <div class="card"><b>Privacy <code>/privacy</code></b><span>GDPR: who runs it, what is stored (first names, tick times), how long (about 400 days in Redis), how to delete a home</span></div>
+        <div class="card"><b>Install help <code>/install</code></b><span>Linked from the app and the poster, so it needs its own URL</span></div>
+        <div class="card"><b>Danish <code>/da</code></b><span>Level 3. Most target homes speak Danish</span></div>
+        <div class="card"><b>Kitchen page <code>/da/kollegium</code></b><span>Level 4. No app ranks for this search today</span></div>
+      </div>
+      <div class="colm fold">
+        <div class="head"><i>~</i>Section, not a page</div>
+        <p class="sub">The content is short. A page of its own looks empty.</p>
+        <div class="card"><b>About</b><span>Two sentences in the footer. The personal story is more trusted than a company "About us"</span></div>
+        <div class="card"><b>Contact</b><span>Email as plain text in the footer and on the privacy page. GDPR needs a contact anyway</span></div>
+        <div class="card"><b>Features</b><span>Blocks 3 to 5 cover them</span></div>
+        <div class="card"><b>FAQ</b><span>Block 8. A separate page only after 10 or more questions</span></div>
+        <div class="card"><b>Case study</b><span>On your personal site, linked from the footer</span></div>
+      </div>
+      <div class="colm skipc">
+        <div class="head"><i>×</i>Do not build</div>
+        <p class="sub">Each one breaks the "free, no sign-up" promise or adds upkeep.</p>
+        <div class="card"><b>Log in / Sign up</b><span>There are no accounts. Use "Open my home"</span></div>
+        <div class="card"><b>Pricing</b><span>It is free. A pricing page suggests a catch</span></div>
+        <div class="card"><b>Cookie banner</b><span>Not needed with no tracking cookies. Use no analytics, or a cookieless one (make sure that it is cookieless)</span></div>
+        <div class="card"><b>Contact form</b><span>Spam and a backend for a few emails a month</span></div>
+        <div class="card"><b>Blog, news, changelog</b><span>Upkeep with no reader</span></div>
+        <div class="card"><b>Newsletter signup</b><span>Asks for an email, the thing Roomies avoids</span></div>
+        <div class="card"><b>Testimonials, user counts</b><span>Not until they are real</span></div>
+        <div class="card"><b>App Store badges</b><span>It is a PWA. Badges point nowhere</span></div>
+      </div>
+    </div>
+    <div class="donts" aria-label="Content to avoid">
+      <span class="eyebrow" style="align-self: center; margin-right: 4px;">Also avoid in the content</span>
+      <span class="dont"><b>×</b>The words "chore app"</span>
+      <span class="dont"><b>×</b>Your roomies' real names or PINs in screenshots</span>
+      <span class="dont"><b>×</b>Red "missed" dots in hero images</span>
+      <span class="dont"><b>×</b>Leaderboards and points</span>
+      <span class="dont"><b>×</b>Stock photos (use your doodles and avatars)</span>
+      <span class="dont"><b>×</b>A nagging tone</span>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="where">
+    <span class="eyebrow">Where the page lives</span>
+    <h2 id="where">Three ways to place it next to the app</h2>
+    <p class="lede">Today the app owns <code>/</code>. The PWA starts at <code>start_url: '/'</code>, and the service worker sends every path to the app. So the home page needs its own place.</p>
+    <div class="opts">
+      <div class="opt rec">
+        <span class="badge">Recommended</span>
+        <h3>A. Home at the root, app under a path</h3>
+        <div class="urls"><code>roomies.dk/</code><code>roomies.dk/app</code></div>
+        <ul>
+          <li class="p">One domain, one deploy, one Vite build with two entry pages</li>
+          <li class="p">Fits the multi-home plan later (<code>/app</code> remembers your home)</li>
+          <li class="p">Cheap now, because no phone has installed the app yet</li>
+          <li class="m">Move <code>start_url</code> and the service worker scope to <code>/app</code></li>
+        </ul>
+      </div>
+      <div class="opt">
+        <h3>B. Two subdomains</h3>
+        <div class="urls"><code>roomies.dk</code><code>app.roomies.dk</code></div>
+        <ul>
+          <li class="p">Clean split, the home page can be any static site</li>
+          <li class="p">The service worker never touches the home page</li>
+          <li class="m">Two projects and two deploys to keep in sync</li>
+          <li class="m">More setup than a hobby needs at level 2</li>
+        </ul>
+      </div>
+      <div class="opt">
+        <h3>C. No home page, a welcome state</h3>
+        <div class="urls"><code>roomies.dk/</code><code>(same app)</code></div>
+        <ul>
+          <li class="p">Least work: the login screen gets a "What is this?" card</li>
+          <li class="p">Enough for level 1 and early level 2</li>
+          <li class="m">The whole app bundle loads for a curious visitor</li>
+          <li class="m">Hard to grow into a Danish page or a kitchen page</li>
+        </ul>
+      </div>
+    </div>
+    <div class="warn">
+      <b>Decide this before the first deploy.</b>
+      <span>If you change <code>start_url</code> after your roomies add the app to their home screens, their icons can keep opening the old address. Today nobody has installed it, so a move is free.</span>
+    </div>
+  </section>
+
+  <section class="ask" aria-labelledby="question">
+    <span class="eyebrow">One question before the design</span>
+    <h2 id="question">What is the home page's first job?</h2>
+    <p class="lede">The answer decides the main button, which blocks come first, and when to build it.</p>
+    <div class="answers">
+      <div class="ans"><span class="l">a</span><div><b>Tell strangers this is private</b><span>Level 1. A welcome card is enough. Build the real page later.</span></div></div>
+      <div class="ans rec"><span class="l">b</span><div><b>Get friends' homes to try it</b><span>Level 2. Demo first, "Want it for your home?" by email. My pick, because it tests demand before you build self-serve setup.</span></div></div>
+      <div class="ans"><span class="l">c</span><div><b>Let anyone start a home</b><span>Level 3. Needs the setup flow first. The page waits for it.</span></div></div>
+      <div class="ans"><span class="l">d</span><div><b>Show the project to developers</b><span>Template and portfolio path. GitHub and case study first, the demo second.</span></div></div>
+    </div>
+  </section>
+
+  <footer>Sources: docs/overview.md, analysis.md, roadmap.md, competitors.md, roomies-startup/02-strategy/hobby-direction.md, 05-financial/revenue-options.md, README.md, vite.config.ts, src/App.tsx · Written 10 Oct 2026 at commit 88b01fc</footer>
+</main>

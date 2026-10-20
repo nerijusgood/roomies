@@ -18,7 +18,7 @@ export function Checklist() {
   const me = useWeekSummary(week).find((s) => s.person.id === user.id)!
   const { weeks } = useSync()
   const mine = weeks[week]?.[user.id] ?? {}
-  const [showHow, setShowHow] = useState(false)
+  const [showHow, setShowHow] = useState<Record<string, boolean>>({})
   const [toast, setToast] = useState<string | null>(null)
   const wasDone = useRef(me.status === 'done')
   const lastTick = useRef(0)
@@ -59,48 +59,57 @@ export function Checklist() {
           {me.done}/{me.total}
         </ProgressRing>
         <div className="relative z-10 min-w-0 flex-1">
-          <h1 className="text-2xl font-medium leading-tight">{area.name}</h1>
+          <h1 className="text-2xl font-medium leading-tight">{me.allAreas ? 'All areas' : area.name}</h1>
           <p className={cn('mt-0.5 text-sm', c.ink)}>{motivation(me.done, me.total, week + user.id)}</p>
         </div>
         <Doodle name={area.doodle} className="pointer-events-none absolute -bottom-3 -right-4 h-20 w-24 opacity-90" />
       </section>
 
-      {area.body && (
-        <div className="mt-3 rounded-lg bg-card">
-          <button onClick={() => setShowHow((v) => !v)} className="flex w-full items-center justify-between px-4 py-3 text-sm font-medium" aria-expanded={showHow}>
-            How to do it well
-            <CaretDown className={cn('transition', showHow && 'rotate-180')} />
-          </button>
-          <AnimatePresence initial={false}>
-            {showHow && (
-              <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
-                <div className="md px-4 pb-4 text-muted-foreground">
-                  <Markdown>{area.body}</Markdown>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      )}
+      {me.sections.map((section) => (
+        <div key={section.area.id}>
+          {me.allAreas && <h2 className="mb-1 mt-5 px-1 text-lg font-medium">{section.area.name}</h2>}
+          {section.area.body && (
+            <div className="mt-3 rounded-lg bg-card">
+              <button
+                onClick={() => setShowHow((v) => ({ ...v, [section.area.id]: !v[section.area.id] }))}
+                className="flex w-full items-center justify-between px-4 py-3 text-sm font-medium"
+                aria-expanded={Boolean(showHow[section.area.id])}
+              >
+                How to do it well
+                <CaretDown className={cn('transition', showHow[section.area.id] && 'rotate-180')} />
+              </button>
+              <AnimatePresence initial={false}>
+                {showHow[section.area.id] && (
+                  <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
+                    <div className="md px-4 pb-4 text-muted-foreground">
+                      <Markdown>{section.area.body}</Markdown>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          )}
 
-      <div className="mt-3 rounded-lg bg-card px-4 py-1">
-        {area.checklist.map((item) => {
-          const state = mine[item.id]
-          const checked = Boolean(state?.done)
-          return (
-            <CheckRow
-              key={item.id}
-              text={item.text}
-              checked={checked}
-              stamp={checked && state ? formatStamp(state.at) : undefined}
-              onToggle={() => {
-                lastTick.current = Date.now()
-                tick(week, item.id, !checked)
-              }}
-            />
-          )
-        })}
-      </div>
+          <div className="mt-3 rounded-lg bg-card px-4 py-1">
+            {section.items.map((item) => {
+              const state = mine[item.key]
+              const checked = Boolean(state?.done)
+              return (
+                <CheckRow
+                  key={item.key}
+                  text={item.text}
+                  checked={checked}
+                  stamp={checked && state ? formatStamp(state.at) : undefined}
+                  onToggle={() => {
+                    lastTick.current = Date.now()
+                    tick(week, item.key, !checked)
+                  }}
+                />
+              )
+            })}
+          </div>
+        </div>
+      ))}
       <p className="mt-3 text-center text-xs text-muted-foreground">Tick as you go. Everyone sees your progress.</p>
 
       <AnimatePresence>

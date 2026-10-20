@@ -3,7 +3,7 @@
 import type { TickStore } from '../../server/logic'
 import { handleGetWeek, handlePostTicks } from '../../server/logic'
 import type { WeekTicks } from '@/shared/types'
-import { assignmentsFor, deadlineOf } from '@/shared/rotation'
+import { areasFor, deadlineOf, isSoloWeek } from '@/shared/rotation'
 import { addWeeks, mondayOf, weekId } from '@/shared/week'
 import { areaById, config } from './data'
 
@@ -41,10 +41,13 @@ function seed(): Record<string, WeekTicks> {
   const all: Record<string, WeekTicks> = {}
   for (const [week, shares] of plan) {
     if (week < config.startWeek) continue
-    const assign = assignmentsFor(config, week)
+    const assign = areasFor(config, week)
+    const solo = isSoloWeek(config, week)
     const ticks: WeekTicks = {}
     config.people.forEach((p, i) => {
-      const items = areaById(assign[p.id])?.checklist ?? []
+      const items = (assign[p.id] ?? []).flatMap((id) =>
+        (areaById(id)?.checklist ?? []).map((it) => ({ ...it, id: solo ? `${id}:${it.id}` : it.id })),
+      )
       const count = Math.round(items.length * shares[i % shares.length])
       const start =
         week === current

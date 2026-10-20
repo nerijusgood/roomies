@@ -25,6 +25,30 @@ export function assignmentsFor(config: Config, week: string): Record<string, str
   return result
 }
 
+/** True when one person cleans all areas this week. */
+export function isSoloWeek(config: Config, week: string): boolean {
+  return Boolean(config.solo && week >= config.solo.from)
+}
+
+/** Who cleans everything this week (solo weeks only). */
+export function cleanerFor(config: Config, week: string): string | null {
+  const solo = config.solo
+  if (!solo || week < solo.from || solo.order.length === 0) return null
+  const override = config.overrides.find((o) => o.week === week)?.cleaner
+  if (override) return override
+  return solo.order[mod(weeksBetween(solo.from, week), solo.order.length)]
+}
+
+/** personId -> area ids for a week. Solo weeks: the cleaner gets every area, others none. */
+export function areasFor(config: Config, week: string): Record<string, string[]> {
+  if (isSoloWeek(config, week)) {
+    const cleaner = cleanerFor(config, week)
+    return Object.fromEntries(config.people.map((p) => [p.id, p.id === cleaner ? [...config.areas] : []]))
+  }
+  const legacy = assignmentsFor(config, week)
+  return Object.fromEntries(config.people.map((p) => [p.id, legacy[p.id] ? [legacy[p.id] as string] : []]))
+}
+
 export function areaFor(config: Config, week: string, personId: string): string | null {
   return assignmentsFor(config, week)[personId] ?? null
 }

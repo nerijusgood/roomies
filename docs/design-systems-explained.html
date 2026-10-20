@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Design Systems Explained</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700;9..40,800&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* Same pastel bento look as the Roomies app and docs/competitors-infographic.html */
+:root {
+  --bg: #F4F2EF; --card: #FFFFFF; --fg: #1C1C1C; --fg-2: #57534D; --fg-3: #8A857E;
+  --line: #E8E4DE; --track: #EDEAE5; --accent: #F07A2B; --accent-ink: #B4500F;
+  --pill-bg: #1C1C1C; --pill-fg: #FFFFFF;
+  --butter: #FFE9A3;   --butter-ink: #6B5A1E;
+  --lavender: #E7E6FB; --lavender-ink: #55508A;
+  --peach: #FDE4DA;    --peach-ink: #8A4D35;
+  --mint: #D9F3EE;     --mint-ink: #2F6E62;
+  --cream: #FFF1DC;    --cream-ink: #8A6A35;
+  --sky: #DDEEFF;      --sky-ink: #35628A;
+  --font: "DM Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "DM Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --r: 24px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #151413; --card: #211F1D; --fg: #F4F2EF; --fg-2: #C9C3BA; --fg-3: #9C968E;
+    --line: #34312D; --track: #2C2A27; --accent: #F28A43; --accent-ink: #F6A66F;
+    --pill-bg: #F4F2EF; --pill-fg: #151413;
+    --butter: #3A3320;   --butter-ink: #F2DC8E;
+    --lavender: #2A2940; --lavender-ink: #C9C5F5;
+    --peach: #3D2A22;    --peach-ink: #F5BFA8;
+    --mint: #1E3632;     --mint-ink: #A6E3D6;
+    --cream: #3A3020;    --cream-ink: #F0D3A3;
+    --sky: #1F2E3D;      --sky-ink: #A9CDF2;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #151413; --card: #211F1D; --fg: #F4F2EF; --fg-2: #C9C3BA; --fg-3: #9C968E;
+  --line: #34312D; --track: #2C2A27; --accent: #F28A43; --accent-ink: #F6A66F;
+  --pill-bg: #F4F2EF; --pill-fg: #151413;
+  --butter: #3A3320;   --butter-ink: #F2DC8E;
+  --lavender: #2A2940; --lavender-ink: #C9C5F5;
+  --peach: #3D2A22;    --peach-ink: #F5BFA8;
+  --mint: #1E3632;     --mint-ink: #A6E3D6;
+  --cream: #3A3020;    --cream-ink: #F0D3A3;
+  --sky: #1F2E3D;      --sky-ink: #A9CDF2;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 15px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+.wrap { max-width: 1080px; margin: 0 auto; padding: 28px 16px 48px; }
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+p { margin: 0; }
+code { font-family: var(--mono); font-size: 13px; }
+.eyebrow { font-family: var(--mono); font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--fg-3); }
+.board { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 12px; }
+.tile { background: var(--card); border-radius: var(--r); padding: 22px; min-width: 0; display: flex; flex-direction: column; gap: 14px; }
+.s12 { grid-column: span 12; } .s8 { grid-column: span 8; } .s7 { grid-column: span 7; }
+.s6 { grid-column: span 6; } .s5 { grid-column: span 5; } .s4 { grid-column: span 4; }
+.muted { color: var(--fg-2); }
+.small { font-size: 13.5px; color: var(--fg-2); }
+
+/* Hero */
+.hero { background: var(--peach); color: var(--peach-ink); padding: 28px; }
+.hero h1 { font-size: clamp(28px, 4.5vw, 44px); line-height: 1.08; font-weight: 800; letter-spacing: -0.02em; color: var(--fg); }
+.hero p { font-size: 17px; max-width: 60ch; }
+
+/* Layer stack */
+.stack { display: flex; flex-direction: column; gap: 8px; }
+.layer { border-radius: 18px; padding: 14px 16px; display: grid; grid-template-columns: 34px 1fr; gap: 12px; align-items: start; }
+.layer .n { width: 34px; height: 34px; border-radius: 999px; background: var(--card); display: grid; place-items: center; font-weight: 700; font-size: 14px; }
+.layer h3 { font-size: 16px; }
+.layer .ex { margin-top: 6px; display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font-family: var(--mono); font-size: 12px; background: var(--card); color: var(--fg); border-radius: 999px; padding: 3px 10px; }
+.l1 { background: var(--butter); color: var(--butter-ink); }
+.l2 { background: var(--mint); color: var(--mint-ink); }
+.l3 { background: var(--lavender); color: var(--lavender-ink); }
+.l4 { background: var(--sky); color: var(--sky-ink); }
+
+/* Ripple diagram */
+.ripple { display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: center; }
+.src { background: var(--track); border-radius: 18px; padding: 14px; text-align: center; }
+.sw { width: 56px; height: 56px; border-radius: 16px; background: var(--accent); margin: 0 auto 8px; }
+.targets { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.tg { border: 1px solid var(--line); border-radius: 14px; padding: 10px 12px; display: flex; align-items: center; gap: 10px; font-size: 13.5px; }
+.dot { width: 14px; height: 14px; border-radius: 999px; background: var(--accent); flex: none; }
+.pill { background: var(--accent); color: #fff; border-radius: 999px; padding: 2px 10px; font-size: 12px; font-weight: 600; flex: none; }
+.ring { width: 18px; height: 18px; border-radius: 999px; border: 3px solid var(--accent); border-right-color: var(--track); flex: none; }
+
+/* Benefits */
+.benefits { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.b { border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 6px; }
+.b h3 { font-size: 15.5px; color: var(--fg); }
+.b p { font-size: 13.5px; }
+
+/* Steps */
+.steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+.steps li { background: var(--track); border-radius: 18px; padding: 14px; display: flex; flex-direction: column; gap: 6px; }
+.steps .k { font-family: var(--mono); font-size: 11.5px; color: var(--accent-ink); }
+.steps h3 { font-size: 15px; }
+.steps p { font-size: 13px; color: var(--fg-2); }
+
+/* Status list */
+.status { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.status li { display: grid; grid-template-columns: 22px 1fr; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+.status li:last-child { border-bottom: 0; }
+.ok, .gap { width: 22px; height: 22px; border-radius: 999px; display: grid; place-items: center; font-size: 12px; font-weight: 700; }
+.ok { background: var(--mint); color: var(--mint-ink); }
+.gap { background: var(--peach); color: var(--peach-ink); }
+.big { font-size: 34px; font-weight: 800; letter-spacing: -0.02em; line-height: 1; }
+.stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.stat { background: var(--track); border-radius: 18px; padding: 14px; display: flex; flex-direction: column; gap: 6px; }
+
+/* Next */
+.next { background: var(--pill-bg); color: var(--pill-fg); }
+.next h2 { font-size: 22px; }
+.next p { color: inherit; opacity: .85; }
+.next .go { align-self: flex-start; background: var(--accent); color: #fff; border-radius: 999px; padding: 8px 16px; font-weight: 600; font-size: 14px; }
+
+h2 { font-size: 20px; letter-spacing: -0.01em; }
+
+@media (max-width: 860px) {
+  .s8, .s7, .s6, .s5, .s4 { grid-column: span 12; }
+  .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .benefits { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 520px) {
+  .benefits, .steps, .targets, .stats { grid-template-columns: 1fr; }
+  .ripple { grid-template-columns: 1fr; }
+  .tile { padding: 18px; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="board">
+
+    <section class="tile hero s12">
+      <span class="eyebrow" style="color:inherit">Before we build one</span>
+      <h1>A design system is the rulebook for how your app looks and behaves.</h1>
+      <p>It holds every color, size, font and component in one place, with a name and a rule for each. Screens use those names. They do not invent their own values.</p>
+    </section>
+
+    <section class="tile s7">
+      <span class="eyebrow">How it is built</span>
+      <h2>Four layers. Each layer uses only the layer under it.</h2>
+      <div class="stack">
+        <div class="layer l4">
+          <span class="n">4</span>
+          <div><h3>Guidelines</h3>
+            <p>The written rules. When to use orange. When a button is black. How much text fits on a tile.</p>
+            <div class="ex"><span class="chip">orange = active or done</span><span class="chip">one pastel per area</span></div></div>
+        </div>
+        <div class="layer l3">
+          <span class="n">3</span>
+          <div><h3>Patterns</h3>
+            <p>Groups of components that solve one job on a screen.</p>
+            <div class="ex"><span class="chip">bento tile grid</span><span class="chip">hero card</span><span class="chip">checklist</span></div></div>
+        </div>
+        <div class="layer l2">
+          <span class="n">2</span>
+          <div><h3>Components</h3>
+            <p>Reusable parts. Each one is built only from tokens.</p>
+            <div class="ex"><span class="chip">Button</span><span class="chip">StatusPill</span><span class="chip">CheckRow</span><span class="chip">ProgressRing</span></div></div>
+        </div>
+        <div class="layer l1">
+          <span class="n">1</span>
+          <div><h3>Tokens</h3>
+            <p>A token is a named design value. You write the name, not the raw value.</p>
+            <div class="ex"><span class="chip">--accent: #F07A2B</span><span class="chip">--radius: 24px</span><span class="chip">--butter / --butter-ink</span></div></div>
+        </div>
+      </div>
+      <p class="small">All examples on this card come from the Roomies code today: <code>src/styles/theme.css</code> and <code>src/components/ui/index.tsx</code>.</p>
+    </section>
+
+    <section class="tile s5">
+      <span class="eyebrow">How it works</span>
+      <h2>Change one token. Every screen follows.</h2>
+      <div class="ripple">
+        <div class="src">
+          <div class="sw"></div>
+          <code>--accent</code>
+        </div>
+        <div class="targets">
+          <div class="tg"><span class="dot"></span>Active nav tab</div>
+          <div class="tg"><span class="pill">Done</span>"All done" state</div>
+          <div class="tg"><span class="ring"></span>Progress ring</div>
+          <div class="tg"><span class="dot" style="background:transparent;border:2px solid var(--accent)"></span>Focus outline</div>
+        </div>
+      </div>
+      <p class="muted">Without tokens, the same orange is typed into many files. To change it, you search and hope you found every copy. With tokens, you edit one line.</p>
+      <p class="muted">Dark mode works the same way. You give each token a second value for dark, and the whole app switches.</p>
+    </section>
+
+    <section class="tile s12">
+      <span class="eyebrow">What is the point</span>
+      <h2>Six things you get from it</h2>
+      <div class="benefits">
+        <div class="b" style="background:var(--butter);color:var(--butter-ink)"><h3>Consistency</h3><p>The same thing looks the same on every screen. Users learn the app faster.</p></div>
+        <div class="b" style="background:var(--mint);color:var(--mint-ink)"><h3>Speed</h3><p>A new screen is assembled from parts that exist. You make fewer small decisions.</p></div>
+        <div class="b" style="background:var(--lavender);color:var(--lavender-ink)"><h3>Safe change</h3><p>A rebrand or a dark mode is a token edit, not a rewrite of every file.</p></div>
+        <div class="b" style="background:var(--sky);color:var(--sky-ink)"><h3>Shared language</h3><p>Designers, developers and Claude say "butter tile" and mean the same thing.</p></div>
+        <div class="b" style="background:var(--peach);color:var(--peach-ink)"><h3>Accessibility in one place</h3><p>You test text contrast once per token pair, for example <code>--mint</code> with <code>--mint-ink</code>.</p></div>
+        <div class="b" style="background:var(--cream);color:var(--cream-ink)"><h3>Reuse outside the app</h3><p>Pitch decks, landing pages and social posts can use the same look without copying code.</p></div>
+      </div>
+    </section>
+
+    <section class="tile s12">
+      <span class="eyebrow">What "extract" means</span>
+      <h2>Five steps from code to a design system</h2>
+      <ol class="steps">
+        <li><span class="k">01</span><h3>Inventory</h3><p>Scan the code for every color, font size, radius, spacing value and component.</p></li>
+        <li><span class="k">02</span><h3>Merge</h3><p>Combine values that are almost the same. Eleven font sizes can become six.</p></li>
+        <li><span class="k">03</span><h3>Name</h3><p>Give each value a name for its job, for example <code>--done</code>, not <code>--green</code>.</p></li>
+        <li><span class="k">04</span><h3>Document</h3><p>Show each token and component with a short rule for when to use it.</p></li>
+        <li><span class="k">05</span><h3>Publish</h3><p>Put it in one page that people and tools can read. Then point the code back at it.</p></li>
+      </ol>
+    </section>
+
+    <section class="tile s7">
+      <span class="eyebrow">Where Roomies is today</span>
+      <h2>About half of a design system exists already</h2>
+      <ul class="status">
+        <li><span class="ok">✓</span><span>Color tokens with names for their job: <code>--primary</code>, <code>--accent</code>, <code>--done</code>, <code>--missed</code>.</span></li>
+        <li><span class="ok">✓</span><span>Six area pastels, each with a matching ink color for text.</span></li>
+        <li><span class="ok">✓</span><span>A radius scale (12, 18, 24, 32 px) and one font, DM Sans.</span></li>
+        <li><span class="ok">✓</span><span>A small component library: Button, IconButton, Avatar, ProgressBar, ProgressRing, StatusPill, CheckRow, Card.</span></li>
+        <li><span class="gap">!</span><span>No dark mode. The tokens have only light values.</span></li>
+        <li><span class="gap">!</span><span>No type scale. Screens use Tailwind sizes and fixed pixel sizes side by side.</span></li>
+        <li><span class="gap">!</span><span>Some colors are typed directly into components instead of using tokens.</span></li>
+        <li><span class="gap">!</span><span>No written rules. The rules live only in code comments and in your head.</span></li>
+      </ul>
+    </section>
+
+    <section class="tile s5">
+      <span class="eyebrow">Measured in src/</span>
+      <h2>The gaps, in numbers</h2>
+      <div class="stats">
+        <div class="stat"><span class="big">20</span><span class="small">hex colors typed outside <code>theme.css</code>, in 5 files</span></div>
+        <div class="stat"><span class="big">11</span><span class="small">different font sizes in use</span></div>
+        <div class="stat"><span class="big">0</span><span class="small">dark mode values</span></div>
+      </div>
+      <p class="small">These numbers are the cleanup list for the extraction. The new design system will define the target values, and the code can then move to them.</p>
+    </section>
+
+    <section class="tile next s12">
+      <span class="eyebrow" style="color:inherit;opacity:.7">Next step</span>
+      <h2>What I will build when you say go</h2>
+      <p>A Design System artifact for Roomies. It will show the color tokens with light and dark values, a tidy type scale, radius and spacing, the components with their states, and the usage rules. It starts from the real values in <code>theme.css</code> and fixes the gaps above.</p>
+      <span class="go">Reply "go" to start</span>
+    </section>
+
+  </div>
+</div>
+</body>
+</html>
