@@ -30,10 +30,3 @@ The money isn't a punishment. It's so whoever does extra work gets something for
 **Miss your next turn too?** It doubles to **400 kr** (200 kr each for Noeleen and Stefano), so skipping never gets easy. It goes back to normal once you've done your week.
 
 Example: Nerijus doesn't do his week and Agnese takes it on Monday. He pays her 200 kr.
-
-## Please note
-
-The checklist covers the main weekly clean, but with 4 people high-use areas won't last seven days.
-
-- You may need to vacuum the floors twice. The front door area with shoes needs to be vacuumed almost 3 times a week.
-- The bathroom countertop needs to be wiped down every second day.
