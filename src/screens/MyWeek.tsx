@@ -3,13 +3,17 @@ import { BookOpenText, CheckCircle, GearSix, Info } from '@phosphor-icons/react'
 import { config, infoPages } from '@/lib/data'
 import { useUser } from '@/lib/user'
 import { formatStamp, useCurrentWeek, useNow, useWeekSummary } from '@/lib/house'
-import { countdown, deadlineOf, overrideNote } from '@/shared/rotation'
+import { countdown, deadlineLabel, deadlineOf, overrideNote } from '@/shared/rotation'
 import { weekNumber } from '@/shared/week'
 import { greeting, motivation } from '@/lib/copy'
 import { Avatar, Button, IconButton, ProgressBar, StatusPill, pastelOf } from '@/components/ui'
 import { Doodle } from '@/components/Doodle'
 import { SyncBadge } from '@/components/SyncBadge'
 import { cn } from '@/lib/cn'
+
+function joinNames(names: string[]) {
+  return names.length < 2 ? (names[0] ?? '') : `${names.slice(0, -1).join(', ')} and ${names[names.length - 1]}`
+}
 
 export function MyWeek() {
   const user = useUser()!
@@ -21,7 +25,7 @@ export function MyWeek() {
   const others = summary.filter((s) => s.person.id !== user.id)
   const deadline = deadlineOf(config, week)
   const due = countdown(deadline, now)
-  const dueDay = `${deadline.toLocaleDateString('en-GB', { weekday: 'short' })} ${config.deadline.time}`
+  const dueDay = deadlineLabel(config, week)
   const note = overrideNote(config, week)
   const c = pastelOf(me.area?.color)
 
@@ -55,7 +59,7 @@ export function MyWeek() {
             <div className="flex size-9 items-center justify-center rounded-full bg-white/70">
               {me.status === 'done' ? <CheckCircle weight="fill" className="text-done text-xl" /> : <span className="text-sm font-medium">{me.percent}%</span>}
             </div>
-            <p className={cn('mt-8 text-sm', c.ink)}>{me.allAreas ? "This week it's your turn" : "This week you're on"}</p>
+            <p className={cn('mt-8 text-sm', c.ink)}>{me.mates.length > 0 ? `This week you and ${joinNames(me.mates.map((x) => x.name))} clean together` : me.allAreas ? "This week it's your turn" : "This week you're on"}</p>
             <h1 className="text-[28px] font-medium leading-tight">{me.allAreas ? 'All areas' : me.area.name}</h1>
             {me.allAreas && <p className={cn('mt-0.5 text-sm', c.ink)}>{me.sections.map((x) => x.area.short).join(' · ')}</p>}
             <p className={cn('mt-1 text-sm', c.ink, due.urgent && me.status !== 'done' && 'font-medium')}>
@@ -77,7 +81,7 @@ export function MyWeek() {
           <p className="mt-10 text-sm text-sky-ink">This week</p>
           <h1 className="text-[28px] font-medium">Free week!</h1>
           <p className="mt-1 text-sm text-sky-ink">
-            {me.cleaner ? `${me.cleaner.name} cleans this week. Nothing on your list.` : 'Nothing on your list. Enjoy.'}
+            {me.cleaners.length > 0 ? `${joinNames(me.cleaners.map((x) => x.name))} clean${me.cleaners.length > 1 ? '' : 's'} this week. Nothing on your list.` : 'Nothing on your list. Enjoy.'}
           </p>
         </section>
       )}

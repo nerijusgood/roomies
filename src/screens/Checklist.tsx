@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from 'motion/react'
 import Markdown from 'react-markdown'
 import { CaretDown } from '@phosphor-icons/react'
 import { useUser } from '@/lib/user'
-import { useSync, tick } from '@/lib/sync'
+import { tick } from '@/lib/sync'
 import { formatStamp, useCurrentWeek, useWeekSummary } from '@/lib/house'
 import { motivation, cheer } from '@/lib/copy'
 import { celebrate } from '@/lib/celebrate'
@@ -16,8 +16,7 @@ export function Checklist() {
   const user = useUser()!
   const week = useCurrentWeek()
   const me = useWeekSummary(week).find((s) => s.person.id === user.id)!
-  const { weeks } = useSync()
-  const mine = weeks[week]?.[user.id] ?? {}
+  const mine = me.ticks
   const [showHow, setShowHow] = useState<Record<string, boolean>>({})
   const [toast, setToast] = useState<string | null>(null)
   const wasDone = useRef(me.status === 'done')
@@ -110,7 +109,9 @@ export function Checklist() {
           </div>
         </div>
       ))}
-      <p className="mt-3 text-center text-xs text-muted-foreground">Tick as you go. Everyone sees your progress.</p>
+      <p className="mt-3 text-center text-xs text-muted-foreground">
+        {me.mates.length > 0 ? `One shared list: ticks by you or ${me.mates.map((x) => x.name).join(' and ')} count for both.` : 'Tick as you go. Everyone sees your progress.'}
+      </p>
 
       <AnimatePresence>
         {toast && (
