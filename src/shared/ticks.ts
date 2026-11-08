@@ -30,3 +30,15 @@ export function finishedAt(ticks: WeekTicks, person: string, itemIds: string[]):
   if (itemIds.length === 0 || !itemIds.every((id) => mine[id]?.done)) return null
   return Math.max(...itemIds.map((id) => mine[id].at))
 }
+
+/** One checklist for a group who clean together: newest tick per item across all members wins. */
+export function groupTicks(ticks: WeekTicks, people: string[]): Record<string, TickState> {
+  const merged = mergeTicks({}, Object.fromEntries(people.map((p) => [p, ticks[p] ?? {}])))
+  const out: Record<string, TickState> = {}
+  for (const items of Object.values(merged)) {
+    for (const [item, state] of Object.entries(items)) {
+      if (!out[item] || state.at >= out[item].at) out[item] = state
+    }
+  }
+  return out
+}

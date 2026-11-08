@@ -1,5 +1,4 @@
 import { useParams } from 'wouter'
-import { useSync } from '@/lib/sync'
 import { formatStamp, useCurrentWeek, useWeekSummary } from '@/lib/house'
 import { isValidWeekId, weekNumber } from '@/shared/week'
 import { Avatar, CheckRow, ProgressBar, StatusPill, pastelOf } from '@/components/ui'
@@ -12,7 +11,6 @@ export function RoomieChecklist() {
   const current = useCurrentWeek()
   const week = params.week && isValidWeekId(params.week) ? params.week : current
   const entry = useWeekSummary(week).find((s) => s.person.id === params.person)
-  const { weeks } = useSync()
 
   if (!entry) {
     return (
@@ -22,7 +20,7 @@ export function RoomieChecklist() {
       </div>
     )
   }
-  const ticks = weeks[week]?.[entry.person.id] ?? {}
+  const ticks = entry.ticks
   const c = pastelOf(entry.area?.color ?? 'sky')
 
   return (
@@ -34,7 +32,7 @@ export function RoomieChecklist() {
           <Avatar seed={entry.person.id} size={52} bg="rgba(255,255,255,0.75)" />
           <div>
             <p className={cn('text-sm', c.ink)}>
-              {entry.person.name} · week {weekNumber(week)}
+              {[entry.person, ...entry.mates].map((x) => x.name).join(' & ')} · week {weekNumber(week)}
               {week === current ? ' (now)' : ''}
             </p>
             <h1 className="text-2xl font-medium leading-tight">{entry.allAreas ? 'All areas' : (entry.area?.name ?? 'Free week')}</h1>

@@ -1,5 +1,5 @@
-import type { Config } from './types'
-import { mondayOf, weeksBetween } from './week'
+import type { Config, SoloPhase } from './types'
+import { addWeeks, mondayOf, weeksBetween } from './week'
 
 function mod(n: number, m: number) {
   return ((n % m) + m) % m
@@ -25,28 +25,45 @@ export function assignmentsFor(config: Config, week: string): Record<string, str
   return result
 }
 
-/** True when one person cleans all areas this week. */
+function soloPhase(config: Config, week: string): SoloPhase | undefined {
+  let found: SoloPhase | undefined
+  for (const phase of [...(config.solo ?? [])].sort((a, b) => a.from.localeCompare(b.from))) {
+    if (week >= phase.from && phase.order.length > 0) found = phase
+  }
+  return found
+}
+
+/** True when whoever is on duty cleans all areas this week. */
 export function isSoloWeek(config: Config, week: string): boolean {
-  return Boolean(config.solo && week >= config.solo.from)
+  return soloPhase(config, week) !== undefined
 }
 
-/** Who cleans everything this week (solo weeks only). */
-export function cleanerFor(config: Config, week: string): string | null {
-  const solo = config.solo
-  if (!solo || week < solo.from || solo.order.length === 0) return null
+/** Person ids on duty this week (solo weeks only). More than one means they clean together. */
+export function cleanersFor(config: Config, week: string): string[] {
+  const phase = soloPhase(config, week)
+  if (!phase) return []
   const override = config.overrides.find((o) => o.week === week)?.cleaner
-  if (override) return override
-  return solo.order[mod(weeksBetween(solo.from, week), solo.order.length)]
+  const turn = override ?? phase.order[mod(weeksBetween(phase.from, week), phase.order.length)]
+  return Array.isArray(turn) ? turn : [turn]
 }
 
-/** personId -> area ids for a week. Solo weeks: the cleaner gets every area, others none. */
+/** personId -> area ids for a week. Solo weeks: everyone on duty gets every area, others none. */
 export function areasFor(config: Config, week: string): Record<string, string[]> {
   if (isSoloWeek(config, week)) {
-    const cleaner = cleanerFor(config, week)
-    return Object.fromEntries(config.people.map((p) => [p.id, p.id === cleaner ? [...config.areas] : []]))
+    const cleaners = cleanersFor(config, week)
+    return Object.fromEntries(config.people.map((p) => [p.id, cleaners.includes(p.id) ? [...config.areas] : []]))
   }
   const legacy = assignmentsFor(config, week)
   return Object.fromEntries(config.people.map((p) => [p.id, legacy[p.id] ? [legacy[p.id] as string] : []]))
+}
+
+/** First week from `fromWeek` (inclusive) where this person has something to clean, or null within `maxWeeks`. */
+export function nextTurn(config: Config, personId: string, fromWeek: string, maxWeeks = 12): string | null {
+  for (let i = 0; i < maxWeeks; i++) {
+    const week = addWeeks(fromWeek, i)
+    if ((areasFor(config, week)[personId] ?? []).length > 0) return week
+  }
+  return null
 }
 
 export function areaFor(config: Config, week: string, personId: string): string | null {
@@ -80,16 +97,30 @@ export function statusOf(doneCount: number, total: number, deadlinePassed: boole
   return doneCount > 0 ? 'started' : 'todo'
 }
 
+/** Day the deadline falls in. A midnight deadline (00:00) belongs to the day before. */
+function deadlineDay(deadline: Date): Date {
+  return new Date(deadline.getTime() - 1)
+}
+
+/** Short deadline text, e.g. "Sun 21:00" or "Sun midnight". */
+export function deadlineLabel(config: Config, week: string): string {
+  const d = deadlineOf(config, week)
+  const day = deadlineDay(d).toLocaleDateString('en-GB', { weekday: 'short' })
+  return `${day} ${timeLabel(d)}`
+}
+
+function timeLabel(d: Date): string {
+  if (d.getHours() === 0 && d.getMinutes() === 0) return 'midnight'
+  return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
+}
+
 /** Friendly countdown text. */
 export function countdown(deadline: Date, now: Date): { label: string; urgent: boolean; passed: boolean } {
   const ms = deadline.getTime() - now.getTime()
   if (ms <= 0) return { label: 'Deadline passed', urgent: true, passed: true }
   const hours = ms / 3600000
-  const sameDay = deadline.toDateString() === now.toDateString()
-  if (sameDay) {
-    const hh = String(deadline.getHours()).padStart(2, '0')
-    const mm = String(deadline.getMinutes()).padStart(2, '0')
-    return { label: `Today, until ${hh}:${mm}`, urgent: true, passed: false }
+  if (deadlineDay(deadline).toDateString() === now.toDateString()) {
+    return { label: `Today, until ${timeLabel(deadline)}`, urgent: true, passed: false }
   }
   const days = Math.ceil(hours / 24)
   return { label: days === 1 ? '1 day left' : `${days} days left`, urgent: days <= 1, passed: false }

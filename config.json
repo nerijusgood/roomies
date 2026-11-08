@@ -3,7 +3,7 @@
   "startWeek": "2026-W41",
   "deadline": {
     "weekday": 7,
-    "time": "21:00"
+    "time": "24:00"
   },
   "people": [
     {
@@ -38,13 +38,28 @@
     "bathrooms"
   ],
   "overrides": [],
-  "solo": {
-    "from": "2026-W44",
-    "order": [
-      "nerijus",
-      "agnese",
-      "stefano",
-      "noeleen"
-    ]
-  }
+  "solo": [
+    {
+      "from": "2026-W44",
+      "order": [
+        "nerijus",
+        "agnese"
+      ]
+    },
+    {
+      "from": "2026-W46",
+      "order": [
+        "agnese",
+        [
+          "noeleen",
+          "stefano"
+        ],
+        "nerijus",
+        [
+          "noeleen",
+          "stefano"
+        ]
+      ]
+    }
+  ]
 }

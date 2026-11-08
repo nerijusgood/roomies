@@ -33,14 +33,14 @@ Other commands: `yarn test` (rotation, sync and API tests), `yarn typecheck`.
 | What | Where |
 |---|---|
 | People, PINs, area order, start week, deadline | `config.json` |
-| Swaps / someone away | `overrides` in `config.json` (`"swap": ["stefano", "agnese"]` or `"assign": { "stefano": null }`) |
+| Swaps / someone away | `overrides` in `config.json` (`"cleaner": "nerijus"` or `"cleaner": ["noeleen", "stefano"]` swaps who cleans a week; old rotation weeks use `"swap"` / `"assign"`) |
 | Areas: name, colour, doodle, checklist, tips | `content/areas/*.md` |
 | House guide pages | `content/info/*.md` |
 | Colours, radius, font | `src/styles/theme.css` |
 
 Area colours: `butter`, `lavender`, `peach`, `mint`, `cream`, `sky`. Doodles: `sofa`, `pot`, `bath`, `door`, `broom`, `sparkle` (in `src/components/Doodle.tsx`). Add `"avatar": "anything"` to a person in `config.json` to get a different face.
 
-**Rotation:** in `startWeek` everyone gets the area at their position in `areas`. Each week everyone moves one area forward. Changing an item's text in a checklist resets that one tick.
+**Rotation:** from week 46 one turn cleans the whole house each week, on a 4-week cycle: Agnese, Noeleen + Stefano, Nerijus, Noeleen + Stefano. Noeleen and Stefano share one checklist (a tick by either counts for both). The order lives in `solo` in `config.json`: a list of phases (`from` week + `order`), where a turn is a person id or a list of ids who clean together. Weeks before the first phase use the old area rotation (each person moves one area forward per week). The deadline is Sunday midnight (`"24:00"`). The missed-week penalties are house rules only (see the House rules page), the app does not track them. Changing an item's text in a checklist resets that one tick.
 
 ## How it works
 

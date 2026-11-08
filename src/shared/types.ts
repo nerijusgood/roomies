@@ -17,15 +17,18 @@ export interface Override {
   /** Or set areas directly: personId -> areaId (null = away this week). */
   assign?: Record<string, string | null>
   note?: string
-  /** Solo weeks only: this person cleans everything this week instead of the normal turn. */
-  cleaner?: string
+  /** Solo weeks only: this person (or this group, who share one checklist) cleans everything instead of the normal turn. */
+  cleaner?: string | string[]
 }
 
-/** One person cleans ALL areas per week. Takes over from `from`; earlier weeks keep the old area rotation. */
-export interface SoloRota {
+/** A turn: one person, or a group (person ids) who clean together and share one checklist. */
+export type Turn = string | string[]
+
+/** One turn cleans ALL areas per week. Takes over from `from`; earlier weeks keep the old area rotation. */
+export interface SoloPhase {
   from: string
-  /** Person ids, in turn order. Everyone gets a turn every `order.length` weeks. */
-  order: string[]
+  /** Turn order. The cycle repeats every `order.length` weeks. */
+  order: Turn[]
 }
 
 export interface Config {
@@ -35,7 +38,8 @@ export interface Config {
   people: Person[]
   areas: string[]
   overrides: Override[]
-  solo?: SoloRota
+  /** Phases, oldest first. A week uses the latest phase whose `from` is not after it. */
+  solo?: SoloPhase[]
 }
 
 export interface ChecklistItem {
