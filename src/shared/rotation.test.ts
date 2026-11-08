@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { Config } from './types'
-import { areasFor, assignmentsFor, cleanersFor, countdown, deadlineLabel, deadlineOf, isSoloWeek, statusOf } from './rotation'
+import { areasFor, assignmentsFor, cleanersFor, countdown, nextTurn, deadlineLabel, deadlineOf, isSoloWeek, statusOf } from './rotation'
 import { addWeeks, mondayOf, weekId, weeksBetween } from './week'
 import { mergeTicks, finishedAt, groupTicks } from './ticks'
 import { handlePostTicks, handleGetWeek, type TickStore } from '../../server/logic'
@@ -109,6 +109,23 @@ describe('solo rota (whoever is on duty cleans all areas)', () => {
     expect(cleanersFor(c, '2026-W46')).toEqual(['d'])
     expect(cleanersFor(c, '2026-W47')).toEqual(['b', 'c'])
     expect(cleanersFor(c, '2026-W48')).toEqual(['a', 'd'])
+  })
+})
+
+describe('nextTurn', () => {
+  const solo: Config = {
+    ...config,
+    overrides: [],
+    solo: [{ from: '2026-W46', order: ['a', ['b', 'c'], 'd', ['b', 'c']] }],
+  }
+  it('finds the next week someone cleans, including the current week', () => {
+    expect(nextTurn(solo, 'a', '2026-W46')).toBe('2026-W46')
+    expect(nextTurn(solo, 'a', '2026-W47')).toBe('2026-W50')
+    expect(nextTurn(solo, 'c', '2026-W48')).toBe('2026-W49')
+    expect(nextTurn(solo, 'd', '2026-W47')).toBe('2026-W48')
+  })
+  it('returns null when nothing comes up', () => {
+    expect(nextTurn({ ...solo, solo: [{ from: '2026-W46', order: ['a'] }] }, 'b', '2026-W46')).toBeNull()
   })
 })
 

@@ -1,5 +1,5 @@
 import type { Config, SoloPhase } from './types'
-import { mondayOf, weeksBetween } from './week'
+import { addWeeks, mondayOf, weeksBetween } from './week'
 
 function mod(n: number, m: number) {
   return ((n % m) + m) % m
@@ -55,6 +55,15 @@ export function areasFor(config: Config, week: string): Record<string, string[]>
   }
   const legacy = assignmentsFor(config, week)
   return Object.fromEntries(config.people.map((p) => [p.id, legacy[p.id] ? [legacy[p.id] as string] : []]))
+}
+
+/** First week from `fromWeek` (inclusive) where this person has something to clean, or null within `maxWeeks`. */
+export function nextTurn(config: Config, personId: string, fromWeek: string, maxWeeks = 12): string | null {
+  for (let i = 0; i < maxWeeks; i++) {
+    const week = addWeeks(fromWeek, i)
+    if ((areasFor(config, week)[personId] ?? []).length > 0) return week
+  }
+  return null
 }
 
 export function areaFor(config: Config, week: string, personId: string): string | null {
